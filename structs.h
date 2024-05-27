@@ -2,58 +2,62 @@
 #include<stdlib.h>
 #include<string.h>
 
-typedef struct opciones{
-	int id;
-	char nombre[50];
-	float precio;
-	struct opciones_les *sig;
-};
-
-typedef struct fecha{
-	int dia,mes,anio;
+typedef struct fech{
+	int dia, mes, anio;
 };
 
 typedef struct tiempo{
-	int hora,minuto;
+	int hora, minuto;
 };
 
+typedef struct opciones{
+	int id;
+	char nombre[50];
+	float costoBase;
+	tiempo instalacion;
+	opciones *sgte;
+}opciones;
+
 typedef struct tareas{
-	int id,id_opcion,orden;
+	int id, idOpcion,orden;
 	tiempo duracion;
-	struct tareas *ant,*sig;
-};
+	tareas *ant,*sgte;
+}tareas;
 
 typedef struct stock{
 	int id, stock;
 	char denominacion[50]; unidad[10];
 	float precio;
-	struct stock *izq,*der;
-};
+	stock *izq,*der;
+}stock;
 
 typedef struct trabajos{
-	int id,id_opcion,altura,id_tecnico,id_cliente;
+	int id, idOpcion, altura, idTecnico, idCliente, finalizado;
 	char ubicacion[50];
-	struct trabajos *sig;
-};
+	fech fechaFin;
+	float costoTotal;
+	trabajos *sgte;
+}trabajos;
 
 typedef struct clientes{
-	int id,dni;
+	int id, dni;
 	char nombre[50];
-	struct clientes *sig;
-};
+	clientes *sgte;
+}clientes;
 
 typedef struct tecnicos{
-	int id,dni;
+	int id, dni;
 	char nombre[50];
-	struct tecnicos *sig;
-};
+	tecnicos *sgte;
+}tecnicos;
 
-typedef struct trabajos_pendientes{
-	int id_trabajos,finalizado;
-	struct trabajos_pendientes *sig;
-};
+typedef struct trabajosPendientes{
+	int idTrabajos;
+	trabajosPendientes *sgte;
+}trabajosPendientes;
 
 
-typedef struct tareas_pendientes{
-	int id_tareas;
-};
+typedef struct tareasPendientes{
+	int idTrabajosPendientes, idTareas;
+	tareasPendientes *sgte;
+}tareasPendientes;
