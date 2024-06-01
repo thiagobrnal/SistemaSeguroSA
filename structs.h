@@ -21,7 +21,7 @@ typedef struct opciones{
 //LDE
 typedef struct tareas{
 	int id, idOpcion,orden;
-	tiempo duracion;
+	struct tiempo duracion;
 	struct tareas *ant,*sgte;
 }tareas;
 
