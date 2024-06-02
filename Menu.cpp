@@ -4,18 +4,20 @@
 #include <time.h>
 
 //includes propios del sistema
-#include "structs.h"
-
+#include "opciones.h"
 
 //Funciones del Menu
-void menuOpciones();
+void menuOpciones(struct opciones **);
 void menuStockMateriales();
 void menuTrabajos();
 void subMenuTrabajos();
 void menuTecnicos();
 void menuClientes();
 
-main(){
+int main(){
+	struct opciones *iniOpciones = NULL;
+	
+	//carga
 	
 	char op;
 	int band = 1;
@@ -52,7 +54,7 @@ main(){
 			break;
 			case '1':
 				//Opciones
-				menuOpciones();
+				menuOpciones(&iniOpciones);
 			break;
 			case '2':
 				//Stock de Materiales
@@ -77,12 +79,15 @@ main(){
 				printf("-------------------------------------------------------------------------------\n\n");
 		}
 	}
+	return 0;
 }
 
-void menuOpciones(){
+void menuOpciones(struct opciones **ini){
 	
 	char op;
 	int band = 1;
+	struct opciones *rc=NULL;
+	rc = (*ini);
 	
 	while(band != 0){
 		
@@ -112,6 +117,7 @@ void menuOpciones(){
 			case '1':
 				system("cls");				
 				//Alta Opciones
+				altaOpciones(ini);
 			break;
 			
 			case '2':
@@ -127,6 +133,7 @@ void menuOpciones(){
 			case '4':
 				system("cls");
 				//Listar Opciones
+				recorrer(rc);
 			break;
 			
 			default:
