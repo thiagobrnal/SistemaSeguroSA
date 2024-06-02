@@ -2,16 +2,16 @@
 #include<stdlib.h>
 #include<string.h>
 
-typedef struct fech{
+struct fech{
 	int dia, mes, anio;
 }fech;
 
-typedef struct tiempo{
+struct tiempo{
 	int hora, minuto;
 }tiempo;
 
 //LES
-typedef struct opciones{
+struct opciones{
 	int id;
 	char nombre[50];
 	float costoBase;
@@ -19,14 +19,20 @@ typedef struct opciones{
 }opciones;
 
 //LDE
-typedef struct tareas{
+struct tareas{
 	int id, idOpcion,orden;
 	struct tiempo duracion;
 	struct tareas *ant,*sgte;
 }tareas;
 
+//LES
+struct materiales{
+	int idStock, idOpcion, cantidad;
+	struct materiales *sgte;
+};
+
 //ARBOL DE BUSQUEDA BINARIA
-typedef struct stock{
+struct stock{
 	int id, stock;
 	char denominacion[50], unidad[10];
 	float precio;
@@ -34,7 +40,7 @@ typedef struct stock{
 }stock;
 
 //LES
-typedef struct trabajos{
+struct trabajos{
 	int id, idOpcion, altura, idTecnico, idCliente, finalizado;
 	char ubicacion[50];
 	struct fech fechaFin;
@@ -43,14 +49,14 @@ typedef struct trabajos{
 }trabajos;
 
 //PILA
-typedef struct clientes{
+struct clientes{
 	int id, dni;
 	char nombre[50];
 	struct clientes *sgte;
 }clientes;
 
 //COLA
-typedef struct tecnicos{
+struct tecnicos{
 	int id, dni;
 	char nombre[50];
 	struct tecnicos *sgte;
