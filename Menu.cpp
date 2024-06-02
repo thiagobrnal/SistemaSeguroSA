@@ -6,6 +6,7 @@
 //includes propios del sistema
 #include "structs.h"
 #include "opciones.h"
+#include "stock.h"
 
 //Funciones del Menu
 void menuOpciones(struct opciones **);
@@ -179,7 +180,7 @@ void menuStockMateriales(){
 			
 			case '1':
 				system("cls");				
-				//Alta Materiales
+				altaStock();
 			break;
 			
 			case '2':
