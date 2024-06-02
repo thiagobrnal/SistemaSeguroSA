@@ -4,6 +4,7 @@
 #include <time.h>
 
 //includes propios del sistema
+#include "structs.h"
 #include "opciones.h"
 
 //Funciones del Menu
