@@ -29,7 +29,7 @@ struct tareas{
 struct materiales{
 	int idStock, idOpcion, cantidad;
 	struct materiales *sgte;
-};
+}materiales;
 
 //ARBOL DE BUSQUEDA BINARIA
 struct stock{
