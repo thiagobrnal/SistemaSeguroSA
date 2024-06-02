@@ -2,8 +2,6 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "structs.h"
-
 //OPCIONES
 void altaOpciones(struct opciones **ini);
 void bajaOpciones();
