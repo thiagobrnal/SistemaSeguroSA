@@ -4,7 +4,7 @@
 
 struct stock* insertar(struct stock *r,struct stock *n);
 void altaStock();
-void buscarPrecio(stock *r, int dato, int *band,float *precio);
+void buscarPrecio(struct stock *r, int dato, int *band, float *precio);
 
 void altaStock() {
     FILE *archivoStock;
@@ -66,14 +66,14 @@ struct stock* insertar(struct stock *r,struct stock *n) {
     return r;
 }
 
-void buscarPrecio(stock *r, int dato, int *band,float *precio) {
+void buscarPrecio(struct stock *r, int dato, int *band,float *precio) {
     if (r != NULL) {
-        recorrerIRD(r->izq, dato, band, precio);
+        buscarPrecio(r->izq, dato, band, precio);
         if (r->id == dato) {
             (*precio)=r->precio;
             *band = 1;
         }
-        recorrerIRD(r->der, dato, band, precio);
+        buscarPrecio(r->der, dato, band, precio);
     }
 }
 
