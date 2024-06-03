@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-void altaTrabajos(struct trabajos **L);
+void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock, struct opciones *r);
 struct trabajos* insertarLES(struct trabajos *L,struct trabajos *nv);
 
 

@@ -2,9 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "structs.h"
+
 void altaTecnicos(struct tecnicos **e, struct tecnicos **s);
-void encolar(struct cola**n, struct cola**e, struct cola**s);
+void encolar(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s);
 
 void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     struct tecnicos *n = NULL;
@@ -47,7 +47,7 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     }
 }
 
-void encolar(struct cola**n, struct cola**e, struct cola**s){
+void encolar(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s){
 	if(*e == NULL) {
 		*s = *n;
 	} else{

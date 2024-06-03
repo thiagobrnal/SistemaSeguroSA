@@ -11,15 +11,15 @@
 #include "materiales.h"
 #include "opciones.h"
 #include "trabajos.h"
-
+#include "tecnicos.h"
 
 
 //Funciones del Menu
 void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales *Lmat, struct stock *Rstc);
 void menuStockMateriales(struct stock **Rstc);
-void menuTrabajos(struct trabajos **Ltrab);
+void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop);
 void subMenuTrabajos();
-void menuTecnicos();
+void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec);
 void menuClientes();
 
 int main(){
@@ -79,11 +79,11 @@ int main(){
 			break;
 			case '3':
 				//Trabajos
-				menuTrabajos(&Ltrab);
+				menuTrabajos(&Ltrab,Ltar,Lmat,Rstc,Lop);
 			break;
 			case '4':
 				//Tecnicos
-				menuTecnicos();
+				menuTecnicos(&Etec,&Stec);
 			break;
 			case '5':
 				//Clientes
@@ -210,7 +210,7 @@ void menuStockMateriales(struct stock **Rstc){
 			
 			case '4':
 				system("cls");
-				listarStock(Rstc);
+				listarStock(*Rstc);
 			break;
 			
 			default:
@@ -223,7 +223,7 @@ void menuStockMateriales(struct stock **Rstc){
 	}
 }
 
-void menuTrabajos(struct trabajos **Ltrab){
+void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop){
 	
 	char op;
 	int band = 1;
@@ -257,7 +257,7 @@ void menuTrabajos(struct trabajos **Ltrab){
 			case '1':
 				system("cls");				
 				//Alta Trabajos
-				altaTrabajos(&Ltrab);
+				altaTrabajos(&(*Ltrab),Ltar,Lmat,Rstc,Lop);
 			break;
 			
 			case '2':
@@ -348,7 +348,7 @@ void subMenuTrabajos(){
 	
 }
 
-void menuTecnicos(){
+void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec ){
 	
 	char op;
 	int band = 1;
@@ -381,6 +381,7 @@ void menuTecnicos(){
 			case '1':
 				system("cls");				
 				//Alta Tecnicos
+				altaTecnicos(&(*Etec),&(*Stec));
 			break;
 			
 			case '2':
