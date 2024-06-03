@@ -4,7 +4,7 @@
 
 
 void altaClientes(struct clientes **tp);
-
+void cargarClientes(struct clientes **nv, struct clientes **top);
 
 void altaClientes(struct clientes **tp){
 	
@@ -39,13 +39,14 @@ void altaClientes(struct clientes **tp){
 			gets(clientes.nombre);
 			fflush(stdin);
 			
-			cargarClientes(&p, &(*tp))
+			cargarClientes(&p, &(*tp));
 			
-			fwrite(&chofer,sizeof(chofer),1,arch1);
+			fwrite(&clientes,sizeof(clientes),1,archC);
 			
-			fclose(arch1);				
+			fclose(archC);				
+	}
+ }
 }
-
 void cargarClientes(struct clientes **nv, struct clientes **top){
 	
 	(*nv)->sgte = (*top);
