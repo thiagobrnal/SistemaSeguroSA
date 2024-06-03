@@ -251,7 +251,7 @@ struct lista* buscarAnterior3(int idO, struct lista *rc){
 
 void procStock(struct stock **R1){
 	FILE *stck=NULL;
-	struct stock, *n=NULL;
+	struct stock *n=NULL;
 	
 	stck = fopen("stock.dat","r+b");
 	if(stck==NULL){

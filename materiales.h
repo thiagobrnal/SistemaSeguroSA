@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "stock.h"
+
 
 // Prototipos de funciones
 struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad);

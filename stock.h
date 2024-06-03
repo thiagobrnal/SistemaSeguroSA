@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct stock* insertar(struct stock *r,struct stock *n);
-void altaStock(struct stock *r);
-void buscarPrecio(struct stock *r, int dato, int *band, float *precio);
 
-void altaStock(struct stock *r) {
+
+void altaStock(struct stock **r);
+void buscarPrecio(struct stock *r, int dato, int *band, float *precio);
+struct stock* insertarStock(struct stock *r,struct stock *n);
+
+void altaStock(struct stock **r){
     FILE *archivoStock;
     struct stock temp;
     struct stock *n=NULL;
@@ -36,7 +38,7 @@ void altaStock(struct stock *r) {
 		        n->precio = temp.precio;
 		        n->der = NULL;
 		        n->izq = NULL;
-		        r = insertar(r, n);
+		        (*r) = insertarStock(*r, n);
 		        fclose(archivoStock);
 		    } else {
 		        printf("No hay memoria suficiente para cargar los nodos");
@@ -49,15 +51,15 @@ void altaStock(struct stock *r) {
    
 }
 
-struct stock* insertar(struct stock *r,struct stock *n) {
+struct stock* insertarStock(struct stock *r,struct stock *n){
     if (r != NULL) {
         if (r->id == n->id) {
             printf("El nodo ya esta en el arbol\n");
         } else {
             if (r->id > n->id) {
-                r->izq = insertar(r->izq, n);
+                r->izq = insertarStock(r->izq, n);
             } else {
-                r->der = insertar(r->der, n);
+                r->der = insertarStock(r->der, n);
             }
         }
     } else {

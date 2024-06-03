@@ -5,10 +5,11 @@
 
 //includes propios del sistema
 #include "structs.h"
-#include "tareas.h"
-#include "opciones.h"
-#include "stock.h"
 #include "CARGA.h"
+#include "stock.h"
+#include "opciones.h"
+#include "tareas.h"
+#include "materiales.h"
 
 
 //Funciones del Menu
@@ -74,7 +75,7 @@ int main(){
 			break;
 			case '2':
 				//Stock de Materiales
-				menuStockMateriales();
+				menuStockMateriales(&Rstc);
 			break;
 			case '3':
 				//Trabajos
@@ -162,7 +163,7 @@ void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materi
 	}
 }
 
-void menuStockMateriales(){
+void menuStockMateriales(struct stock **Rstc){
 	
 	char op;
 	int band = 1;
@@ -194,7 +195,7 @@ void menuStockMateriales(){
 			
 			case '1':
 				system("cls");				
-				altaStock(Rstc);
+				altaStock(&(*Rstc));
 			break;
 			
 			case '2':
