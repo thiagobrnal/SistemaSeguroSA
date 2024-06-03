@@ -13,12 +13,16 @@ void altaStock(struct stock **r){
     FILE *archivoStock;
     struct stock temp;
     struct stock *n=NULL;
-
+	long ultId;
 
     if ((archivoStock = fopen("stock.dat", "a+b")) != NULL) {
         // LEER DATOS
-        printf("Ingrese ID: ");
-        scanf("%d", &temp.id);
+        fread(&temp, sizeof(temp),1,archivoStock);
+		while(!feof(archivoStock)){
+			ultId = temp.id;
+			fread(&temp, sizeof(temp),1,archivoStock);
+		}
+		temp.id = ultId + 1;
         printf("Ingrese stock: ");
         scanf("%d", &temp.stock);
         printf("Ingrese denominacion: ");

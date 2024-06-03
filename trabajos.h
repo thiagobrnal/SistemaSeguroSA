@@ -2,19 +2,21 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "structs.h"
-#include "opciones.h"
-
 void altaTrabajos(struct trabajos *L){
     FILE *archivoTrabajos;
     trabajos *n = NULL;
     trabajos temp;
 	int band=0;
+	long ultId;
 	
     if ((archivoTrabajos = fopen("trabajos.dat", "a+b")) != NULL) {
         // LEER DATOS
-        printf("Ingrese ID del trabajo: ");
-        scanf("%d", &temp.id);
+        fread(&temp, sizeof(temp),1,archivoTrabajos);
+		while(!feof(archivoTrabajos)){
+			ultId = temp.id;
+			fread(&temp, sizeof(temp),1,archivoTrabajos);
+		}
+		temp.id = ultId + 1;
         /*printf("Ingrese ID de la Opcion: "); //listar opciones y guardar el id
         scanf("%d", &temp.idOpcion); */
         printf("Ingrese altura: ");
