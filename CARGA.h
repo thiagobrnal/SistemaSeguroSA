@@ -17,7 +17,7 @@ void insertarMat(struct materiales **n, struct materiales **ini);
 struct materiales* buscarAnterior3(int idO, struct materiales *rc);
 
 void procStock(struct stock **R1);
-struct stock* insertarStock(struct stock *r, struct stock *n);
+struct stock* insertStock(struct stock *r, struct stock *n);
 
 void procTrabajos(struct trabajos **Ld);
 void insertarTrabajos(struct trabajos **n, struct trabajos **ini);
@@ -270,7 +270,7 @@ void procStock(struct stock **R1){
 				strcpy(n->unidad, stock.unidad);
 				n->precio = stock.precio;
 								
-				*R1 = insertarStock(*R1, n);
+				*R1 = insertStock(*R1, n);
 				
 												
 			}else{
@@ -285,7 +285,7 @@ void procStock(struct stock **R1){
 	fclose(stck);	
 }
 
-struct stock* insertarStock(struct stock *r, struct stock *n){
+struct stock* insertStock(struct stock *r, struct stock *n){
 	
 	if(r != NULL){
 		if(strcmp(r->denominacion, n->denominacion) == 0){
@@ -293,16 +293,16 @@ struct stock* insertarStock(struct stock *r, struct stock *n){
 				printf("\nEl material ya esta registrado en el stock");
 				
 			}else if(r->id < n->id){
-				r->izq = insertarStock(r->izq, n);
+				r->izq = insertStock(r->izq, n);
 								
 			}else{
-				r->der = insertarStock(r->der, n);
+				r->der = insertStock(r->der, n);
 			}
 		}else if(strcmp(r->denominacion, n->denominacion) < 0){
-			r->izq = insertarStock(r->izq, n);
+			r->izq = insertStock(r->izq, n);
 		
 		}else{
-			r->der = insertarStock(r->der, n);
+			r->der = insertStock(r->der, n);
 		}
 	}else{
 		r = n;
