@@ -4,51 +4,51 @@
 
 void CARGA(struct opciones **L1, struct tareas **L2, struct materiales **L3, struct stock **R, struct trabajos **L4, struct clientes **TP, struct tecnicos **E, struct tecnicos **S);
 
-void opciones();
+void procOpciones(struct opciones **La);
 void insertarOpciones(struct lista **n, struct lista **ini);
 struct lista* buscarAnterior1(int id, struct lista *rc);
 
-void tareas();
+void procTareas(struct tareas **Lb);
 void insertarTareas(struct tareas **nv, struct tareas **ini);
 struct lista* buscarAnterior2(int id, struct tareas *rc);
 
-void materiales();
+void procMateriales(struct materiales **Lc);
 void insertarMat(struct lista **n, struct lista **ini);
 struct lista* buscarAnterior3(int idO, struct lista *rc);
 
-void stock();
+void procStock(struct stock **R1);
 struct stock* insertarStock(struct stock *r, struct stock *n);
 
-void trabajos();
+void procTrabajos(struct trabajos **Ld);
 void insertarTrabajos(struct trabajos **n, struct trabajos **ini);
 struct trabajos* buscarAnterior4(int id, struct trabajos *rc);
 
-void clientes();
+void procClientes(struct clientes **TP1);
 void apilarClientes(struct clientes **nv, struct clientes **tope);
 void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnicos **Sa);
 
-void tecnicos();
+void procTecnicos(struct tecnicos **E1, struct tecnicos **S1);
 void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnicos **Sa);
 
 void CARGA(struct opciones **L1, struct tareas **L2, struct materiales **L3, struct stock **R, struct trabajos **L4, struct clientes **TP, struct tecnicos **E, struct tecnicos **S){
 	
-	opciones(&(*L1));
+	procOpciones(&(*L1));
 	
-	tareas(&(L2));
+	procTareas(&(*L2));
 	
-	materiales(&(L3));	
+	procMateriales(&(*L3));	
 	
-	stock(&(R));
+	procStock(&(*R));
 	
-	trabajos(&(L4));
+	procTrabajos(&(*L4));
 	
-	clientes(&(TP));
+	procClientes(&(*TP));
 	
-	tecnicos(&(*E), &(*S));
+	procTecnicos(&(*E), &(*S));
 	
 }
 
-void opciones(struct opciones **La){
+void procOpciones(struct opciones **La){
 
 	FILE *opc;
 	struct opciones *n=NULL; 	
@@ -108,7 +108,7 @@ struct opciones* buscarAnterior1(int id, struct opciones *rc){
 }
 		
 		
-void tareas(struct tareas **Lb){
+void procTareas(struct tareas **Lb){
 	
 	FILE *tar;
 	struct tareas *n=NULL;
@@ -184,7 +184,7 @@ struct lista* buscarAnterior2(int id, struct tareas *rc){
 }
 
 
-void materiales(struct materiales **Lc){
+void procMateriales(struct materiales **Lc){
 	
 	FILE *mat;
 	struct materiales *n=NULL;
@@ -249,7 +249,7 @@ struct lista* buscarAnterior3(int idO, struct lista *rc){
 }
 
 
-void stock(struct stock **R1){
+void procStock(struct stock **R1){
 	FILE *stck=NULL;
 	struct stock, *n=NULL;
 	
@@ -312,7 +312,7 @@ struct stock* insertarStock(struct stock *r, struct stock *n){
 }
 
 
-void trabajos(struct trabajos **Ld){
+void procTrabajos(struct trabajos **Ld){
 	FILE *trab;
 	struct trabajos *n=NULL;
 	int band=0;
@@ -325,7 +325,7 @@ void trabajos(struct trabajos **Ld){
 	} else {
 		fread(&trabajos, sizeof(trabajos),1,trab);
 		
-		while(!feof(opc) || band<>1){
+		while((!feof(opc)) || (band<>1)){
 						
 			n = (struct opciones *) malloc(sizeof(struct opciones));			
 			if(n != NULL){
@@ -382,7 +382,7 @@ struct trabajos* buscarAnterior4(int id, struct trabajos *rc){
 }
 
 
-void clientes(struct clientes **TP1){
+void procClientes(struct clientes **TP1){
 	FILE *clt;
 	struct clientes *p=NULL; 	
 
@@ -418,7 +418,7 @@ void apilarClientes(struct clientes **nv, struct clientes **tope){
 }
 
 
-void tecnicos(struct tecnicos **E1, struct tecnicos **S1){
+void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 	FILE *tec;
 	struct opciones *n=NULL; 	
 
