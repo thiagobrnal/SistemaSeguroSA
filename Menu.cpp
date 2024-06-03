@@ -196,7 +196,7 @@ void menuStockMateriales(){
 			
 			case '1':
 				system("cls");				
-				altaStock();
+				altaStock((Rstc));
 			break;
 			
 			case '2':
@@ -258,6 +258,7 @@ void menuTrabajos(){
 			case '1':
 				system("cls");				
 				//Alta Trabajos
+				altaTrabajos(Ltrab);
 			break;
 			
 			case '2':
