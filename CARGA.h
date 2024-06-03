@@ -152,11 +152,11 @@ void insertarTareas(struct tareas **nv, struct tareas **ini){
 			if(anterior != NULL){
 				aux = anterior->sgte;
 				(*nv)->ant = anterior;
-				anterior->sgte = (*nv)
+				anterior->sgte = (*nv);
 				
 				if(aux != NULL){
 					(*nv)->sgte = aux;
-					aux->ant = (*nv)
+					aux->ant = (*nv);
 				}			
 			}else{
 				(*nv)->sgte = (*ini);
