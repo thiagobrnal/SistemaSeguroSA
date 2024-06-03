@@ -2,8 +2,6 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "structs.h"
-
 void altaTarea(struct tareas **inicio, int idOpcion);
 void bajaTarea(struct tareas **inicio, int id);
 void modificarTarea(struct tareas *inicio);
