@@ -2,12 +2,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-void altaTrabajos(struct trabajos *L){
+void altaTrabajos(struct trabajos **L);
+struct trabajos* insertarLES(struct trabajos *L,struct trabajos *nv);
+
+
+void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock, struct opciones *r){
     FILE *archivoTrabajos;
-    trabajos *n = NULL;
-    trabajos temp;
+    struct trabajos *n = NULL;
+    struct trabajos temp;
 	int band=0;
 	long ultId;
+	float materiales=0,costoBase=0;
 	
     if ((archivoTrabajos = fopen("trabajos.dat", "a+b")) != NULL) {
         // LEER DATOS
@@ -17,13 +22,18 @@ void altaTrabajos(struct trabajos *L){
 			fread(&temp, sizeof(temp),1,archivoTrabajos);
 		}
 		temp.id = ultId + 1;
-        /*printf("Ingrese ID de la Opcion: "); //listar opciones y guardar el id
-        scanf("%d", &temp.idOpcion); */
+		
+		printf("Seleccione el ID de la opcion que desea usar: ");
+		listarOpciones(Ltar,rMat,rStock);
+		scanf("%d",&temp.idOpcion);
+        
         printf("Ingrese altura: ");
         scanf("%d", &temp.altura);
+        
         if(temp.altura>4){
         	band=1;
         }
+        
         printf("Ingrese ID del Tecnico: "); //de donde
         scanf("%d", &temp.idTecnico);
         printf("Ingrese ID del Cliente: "); //de donde
@@ -36,6 +46,9 @@ void altaTrabajos(struct trabajos *L){
         scanf("%d", &temp.fechaFin.mes);
         printf("Ingrese anio de finalizacion: ");
         scanf("%d", &temp.fechaFin.anio);
+        
+    	materiales=precioMateriales(temp.idOpcion,rMat,rStock);
+        costoBase=obtenerCostoBase(temp.idOpcion,r);
         if(band==1){
         	costoBase*=1.20;
         	temp.costoTotal=materiales+costoBase;
@@ -53,7 +66,7 @@ void altaTrabajos(struct trabajos *L){
         if (n != NULL) {
             *n = temp; // Copiar datos
             n->sgte = NULL; 
-            L=insertarLES(L,n);
+            (*L)=insertarLES(*L,n);
             fclose(archivoTrabajos);
         } else {
             printf("No hay memoria suficiente para cargar los nodos a la LES");
@@ -64,13 +77,13 @@ void altaTrabajos(struct trabajos *L){
     }
 }
 
-struct trabajos* insertarLES(lista *L,lista *nv){
+struct trabajos* insertarLES(struct trabajos *L,struct trabajos *nv){
 	if(L!=NULL){
-		if((nv->num)<(L->num)){
-			nv->sig=L;
+		if((nv->id)<(L->id)){
+			nv->sgte=L;
 			L=nv;
 		}else{
-			L->sig=insertar(L->sig,nv);
+			L->sgte=insertarLES(L->sgte,nv);
 		}
 	}else{
 		L=nv;

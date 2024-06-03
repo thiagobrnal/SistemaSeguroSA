@@ -10,7 +10,6 @@
 #include "tareas.h"
 #include "materiales.h"
 #include "opciones.h"
-#include "clientes.h"
 #include "trabajos.h"
 
 
@@ -21,7 +20,7 @@ void menuStockMateriales(struct stock **Rstc);
 void menuTrabajos(struct trabajos **Ltrab);
 void subMenuTrabajos();
 void menuTecnicos();
-void menuClientes(struct clientes **TPclt);
+void menuClientes();
 
 int main(){
 	
@@ -88,7 +87,7 @@ int main(){
 			break;
 			case '5':
 				//Clientes
-				menuClientes(&TPclt);
+				menuClientes();
 			break;
 			
 			default:
@@ -211,7 +210,7 @@ void menuStockMateriales(struct stock **Rstc){
 			
 			case '4':
 				system("cls");
-				//Listar Stock Materiales
+				listarStock(Rstc);
 			break;
 			
 			default:
@@ -409,7 +408,7 @@ void menuTecnicos(){
 	}
 }
 
-void menuClientes(struct clientes **tope){
+void menuClientes(){
 	
 	char op;
 	int band = 1;
@@ -442,7 +441,6 @@ void menuClientes(struct clientes **tope){
 			case '1':
 				system("cls");				
 				//Alta Clientes
-				altaClientes(&(*tope))
 			break;
 			
 			case '2':
