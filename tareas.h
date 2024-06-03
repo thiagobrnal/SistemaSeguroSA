@@ -9,8 +9,8 @@ void bajaTarea(struct tareas **inicio, int id);
 void modificarTarea(struct tareas *inicio);
 void listarTareas(struct tareas *inicio);
 struct tareas *nuevoNodo(int id, int idOpcion, int orden, struct tiempo duracion);
-int sumaHorasTareas(int idOpcion, struct tareas *inicio);
-int sumaMinutosTareas(int idOpcion, struct tareas *inicio);
+void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini);
+
 
 void altaTarea(struct tareas **ini, int idOpcion) {
     struct tareas *n = NULL;
@@ -176,18 +176,24 @@ int sumaHorasTareas(int idOpcion, struct tareas *ini) {
     return sumaHoras;
 }
 
-// Funcion para calcular la suma de los minutos de las tareas asociadas a un idOpcion
-int sumaMinutosTareas(int idOpcion, struct tareas *ini) {
+// Funcion para calcular la suma de las horas y minutos de las tareas asociadas a un idOpcion
+void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini) {
+    int sumaHoras = 0;
     int sumaMinutos = 0;
     struct tareas *temp = ini;
+    
     while (temp != NULL) {
         if (temp->idOpcion == idOpcion) {
+            sumaHoras += temp->duracion.hora;
             sumaMinutos += temp->duracion.minuto;
         }
         temp = temp->sgte;
     }
-    return sumaMinutos;
+    
+    // Ajustar la suma de minutos si supera 60
+    sumaHoras += sumaMinutos / 60;
+    sumaMinutos %= 60;
+
+    printf("%d horas %d minutos", sumaHoras, sumaMinutos);
 }
-
-
 
