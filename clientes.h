@@ -3,7 +3,7 @@
 #include<string.h>
 
 
-void altaClientes(struct clientes );
+void altaClientes(struct clientes **tp);
 
 
 void altaClientes(struct clientes **tp){

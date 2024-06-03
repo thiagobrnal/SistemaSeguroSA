@@ -50,14 +50,16 @@ struct trabajos{
 
 //PILA
 struct clientes{
-	int id, dni;
+	int id;
+	long dni;
 	char nombre[50];
 	struct clientes *sgte;
 }clientes;
 
 //COLA
 struct tecnicos{
-	int id, dni;
+	int id;
+	long dni;
 	char nombre[50];
 	struct tecnicos *sgte;
 }tecnicos;
