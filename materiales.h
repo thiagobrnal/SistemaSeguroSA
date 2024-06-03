@@ -99,18 +99,20 @@ void listarMateriales() {
     }
 }
 
-float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock) {
+float precioMateriales(int idOp, struct materiales *rMat, struct stock *rStock) {
+	struct materiales *aux;
+	aux = rMat;
     float totalPrecio = 0.0;
-    while (rMat != NULL) {
-        if (rMat->idOpcion == idOpcion) {
+    while (aux != NULL) {
+        if (aux->idOpcion == idOp) {
             int band = 0;
             float precio = 0.0;
-            buscarPrecio(rStock, rMat->idStock, &band, &precio);
+            buscarPrecio(rStock, aux->idStock, &band, &precio);
             if (band) {
-                totalPrecio += precio * rMat->cantidad;
+                totalPrecio += precio * aux->cantidad;
             }
         }
-        rMat = rMat->sgte;
+        aux = aux->sgte;
     }
     return totalPrecio;
 }

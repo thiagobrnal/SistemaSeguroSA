@@ -29,7 +29,7 @@ struct opciones* nuevoNodo(int id, char* nombre, float costoBase) {
 	return nodo;
 }
 
-void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales *Lmat){
+void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales **Lmat){
 	struct opciones *n = NULL, *r = NULL;
     char nombre[50];
     float costoBase;
@@ -100,7 +100,7 @@ void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc
     
     	printf("\n\t\tMateriales\n");
     	do{
-    		altaMateriales(&Lmat,idOp,Rstc);
+    		altaMateriales(&(*Lmat),idOp,Rstc);
    		 	fflush(stdin);
 		
     	    printf("\nDesea ingresar otro material? y/n: ");
@@ -132,7 +132,7 @@ void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *
     		sumaHorasMinutosTareas(opciones.id,Ltar);
     		printf(" Costo: %f",opciones.costoBase);
     		precioMat = precioMateriales(opciones.id,rMat,rStock);
-    		printf(" Costo de materiales: %f",precioMateriales);
+    		printf(" Costo de materiales: %f",precioMat);
     		costoTotal = precioMat + opciones.costoBase;
     		printf(" Costo Total: %f",costoTotal);
     		printf("\n----------------");	
