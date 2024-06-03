@@ -163,18 +163,6 @@ void listarTareas(struct tareas *ini) {
     }
 }
 
-// Funcion para calcular la suma de las horas de las tareas asociadas a un idOpcion
-int sumaHorasTareas(int idOpcion, struct tareas *ini) {
-    int sumaHoras = 0;
-    struct tareas *temp = ini;
-    while (temp != NULL) {
-        if (temp->idOpcion == idOpcion) {
-            sumaHoras += temp->duracion.hora;
-        }
-        temp = temp->sgte;
-    }
-    return sumaHoras;
-}
 
 // Funcion para calcular la suma de las horas y minutos de las tareas asociadas a un idOpcion
 void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini) {
