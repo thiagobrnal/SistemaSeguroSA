@@ -6,20 +6,34 @@
 
 void altaTarea(struct tareas **inicio, int idOpcion);
 void bajaTarea(struct tareas **inicio, int id);
-void modificarTarea(struct tareas *inicio, int id);
+void modificarTarea(struct tareas *inicio);
 void listarTareas(struct tareas *inicio);
-struct tareas *nuevoNodoTarea(int id, int idOpcion, int orden, struct tiempo duracion);
+struct tareas *nuevoNodo(int id, int idOpcion, int orden, struct tiempo duracion);
 int sumaHorasTareas(int idOpcion, struct tareas *inicio);
 int sumaMinutosTareas(int idOpcion, struct tareas *inicio);
 
+void altaTarea(struct tareas **ini, int idOpcion) {
+    struct tareas *n = NULL;
+    int ultId = 0;
+    struct tareas tareas;
 
-void altaTarea(struct tareas **inicio) {
-    
+    FILE *arch1 = fopen("tareas.dat", "a+b");
+    if (arch1 == NULL) {
+        printf("\nError al abrir el archivo tareas.dat");
+        return;
+    }
 
+    rewind(arch1);
+    while (fread(&tareas, sizeof(tareas), 1, arch1)) {
+        ultId = tareas.id;
+    }
 
-    printf("Ingrese el ID de la nueva tarea: ");
+    tareas.id = ultId + 1;
+
+    // Leer datos
+    printf("Ingrese el id de la tarea: ");
     scanf("%d", &tareas.id);
-
+    
     printf("Ingrese el orden de la tarea: ");
     scanf("%d", &tareas.orden);
 
@@ -28,49 +42,43 @@ void altaTarea(struct tareas **inicio) {
 
     printf("Ingrese los minutos de duracion: ");
     scanf("%d", &tareas.duracion.minuto);
+	
+	printf("Se cargo id desde Opciones: ");
+    tareas.idOpcion=idOpcion;
 
-    // idOpcion del usuario
-    
-    scanf("%d", &opciones.id);
+    fseek(arch1, 0, SEEK_END);
+    fwrite(&tareas, sizeof(tareas), 1, arch1);
+    printf("\nTarea cargada exitosamente\n");
 
-    // Crear nueva tarea
-    struct tareas* nuevaTarea = nuevoNodoTarea(tareas.id, opciones.id, tareas.orden, tareas.duracion);
-    if (nuevaTarea == NULL) {
+    // Crear el nodo
+    n = nuevoNodo(tareas.id, tareas.idOpcion, tareas.orden, tareas.duracion);
+    if (n == NULL) {
+        printf("No hay memoria.\n");
+        fclose(arch1);
         return;
     }
 
     // Insercion en la lista doblemente enlazada
-    if (*inicio == NULL) {
-        *inicio = nuevaTarea;
+    if (*ini == NULL) {
+        *ini = n;
     } else {
-        struct tareas* temp = *inicio;
+        struct tareas *temp = *ini;
         while (temp->sgte != NULL) {
             temp = temp->sgte;
         }
-        temp->sgte = nuevaTarea;
-        nuevaTarea->ant = temp;
+        temp->sgte = n;
+        n->ant = temp;
     }
-
-    // Guardado en archivo
-    FILE* archivo = fopen("tareas.dat", "ab");
-    if (archivo == NULL) {
-        printf("Error al abrir el archivo tareas.dat\n");
-        return;
-    }
-    fwrite(nuevaTarea, sizeof(struct tareas), 1, archivo);
-    fclose(archivo);
-
-    printf("Tarea registrada exitosamente.\n");
+    fclose(arch1);
 }
 
-
-void bajaTarea(struct tareas **inicio, int id) {
-    if (*inicio == NULL) {
+void bajaTarea(struct tareas **ini, int id) {
+    if (*ini == NULL) {
         printf("La lista de tareas esta vacia.\n");
         return;
     }
 
-    struct tareas *actual = *inicio;
+    struct tareas *actual = *ini;
     struct tareas *anterior = NULL;
 
     while (actual != NULL && actual->id != id) {
@@ -84,7 +92,7 @@ void bajaTarea(struct tareas **inicio, int id) {
     }
 
     if (anterior == NULL) {
-        *inicio = actual->sgte;
+        *ini = actual->sgte;
     } else {
         anterior->sgte = actual->sgte;
         if (actual->sgte != NULL) {
@@ -96,8 +104,12 @@ void bajaTarea(struct tareas **inicio, int id) {
     printf("Tarea con ID %d eliminada exitosamente.\n", id);
 }
 
-void modificarTarea(struct tareas *inicio, int id) {
-    struct tareas *actual = inicio;
+void modificarTarea(struct tareas *ini) {
+    struct tareas *actual = ini;
+    int id = 0;
+
+    printf("Ingrese id para busqueda\n");
+    scanf("%d", &id);
 
     while (actual != NULL && actual->id != id) {
         actual = actual->sgte;
@@ -137,14 +149,14 @@ void modificarTarea(struct tareas *inicio, int id) {
     }
 }
 
-void listarTareas(struct tareas *inicio) {
-    if (inicio == NULL) {
+void listarTareas(struct tareas *ini) {
+    if (ini == NULL) {
         printf("La lista de tareas esta vacia.\n");
         return;
     }
 
     printf("Lista de tareas:\n");
-    struct tareas *temp = inicio;
+    struct tareas *temp = ini;
     while (temp != NULL) {
         printf("ID: %d, ID de Opcion: %d, Orden: %d, Duracion: %dh %dm\n", temp->id, temp->idOpcion, temp->orden, temp->duracion.hora, temp->duracion.minuto);
         temp = temp->sgte;
@@ -152,9 +164,9 @@ void listarTareas(struct tareas *inicio) {
 }
 
 // Funcion para calcular la suma de las horas de las tareas asociadas a un idOpcion
-int sumaHorasTareas(int idOpcion, struct tareas *inicio) {
+int sumaHorasTareas(int idOpcion, struct tareas *ini) {
     int sumaHoras = 0;
-    struct tareas *temp = inicio;
+    struct tareas *temp = ini;
     while (temp != NULL) {
         if (temp->idOpcion == idOpcion) {
             sumaHoras += temp->duracion.hora;
@@ -165,9 +177,9 @@ int sumaHorasTareas(int idOpcion, struct tareas *inicio) {
 }
 
 // Funcion para calcular la suma de los minutos de las tareas asociadas a un idOpcion
-int sumaMinutosTareas(int idOpcion, struct tareas *inicio) {
+int sumaMinutosTareas(int idOpcion, struct tareas *ini) {
     int sumaMinutos = 0;
-    struct tareas *temp = inicio;
+    struct tareas *temp = ini;
     while (temp != NULL) {
         if (temp->idOpcion == idOpcion) {
             sumaMinutos += temp->duracion.minuto;
@@ -176,5 +188,6 @@ int sumaMinutosTareas(int idOpcion, struct tareas *inicio) {
     }
     return sumaMinutos;
 }
+
 
 
