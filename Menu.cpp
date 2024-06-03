@@ -8,6 +8,7 @@
 #include "tareas.h"
 #include "opciones.h"
 #include "stock.h"
+#include "CARGA.h"
 
 
 //Funciones del Menu
@@ -19,6 +20,17 @@ void menuTecnicos();
 void menuClientes();
 
 int main(){
+	
+	struct opciones *Lop=NULL;  
+	struct tareas *Ltar=NULL;
+	struct materiales *Lmat=NULL;
+	struct stock *Rstc=NULL;
+	struct trabajos *Ltrab=NULL;
+	struct clientes *TPclt=NULL;
+	struct tecnicos *Etec=NULL, *Stec=NULL;
+	
+	void CARGA(&Lop, &Ltar, &Lmat, &Rstc, &Ltrab, &TPclt, &Etec, &Stec);
+		
 	struct opciones *iniOpciones = NULL;
 	
 	//carga
