@@ -12,7 +12,7 @@
 
 
 //Funciones del Menu
-void menuOpciones(struct opciones **);
+void menuOpciones(struct opciones **, struct tareas **);
 void menuStockMateriales();
 void menuTrabajos();
 void subMenuTrabajos();
@@ -70,7 +70,7 @@ int main(){
 			break;
 			case '1':
 				//Opciones
-				menuOpciones(&iniOpciones);
+				menuOpciones(&iniOpciones,&Ltar,Lmat,Rstc);
 			break;
 			case '2':
 				//Stock de Materiales
@@ -98,7 +98,7 @@ int main(){
 	return 0;
 }
 
-void menuOpciones(struct opciones **ini){
+void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales *Lmat, struct stock *Rstc){
 	
 	char op;
 	int band = 1;
@@ -133,7 +133,7 @@ void menuOpciones(struct opciones **ini){
 			case '1':
 				system("cls");				
 				//Alta Opciones
-				altaOpciones(ini);
+				altaOpciones(ini,iniTarea);
 			break;
 			
 			case '2':
@@ -149,9 +149,7 @@ void menuOpciones(struct opciones **ini){
 			case '4':
 				system("cls");
 				//Listar Opciones
-				recorrer(rc);
-				printf("--------------------------------------------------------------");
-				listarOpciones();
+				listarOpciones(iniTarea,Lmat,Rstc);
 			break;
 			
 			default:

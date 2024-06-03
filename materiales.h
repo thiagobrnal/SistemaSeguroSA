@@ -9,7 +9,7 @@ struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad);
 void altaMateriales(struct materiales **ini);
 void recorrerMateriales(struct materiales *rc);
 void listarMateriales();
-float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock)
+float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
 
 
 struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad) {
@@ -114,3 +114,4 @@ float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rSto
     }
     return totalPrecio;
 }
+

@@ -2,12 +2,10 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "tareas.h"
-#include "stock.h"
-
+#include "materiales.h"
 
 //OPCIONES
-void altaOpciones(struct opciones **ini);
+void altaOpciones(struct opciones **ini, struct tareas **Ltar);
 void bajaOpciones();
 void modificarOpciones();
 void listarOpciones();
@@ -32,7 +30,7 @@ struct opciones* nuevoNodo(int id, char* nombre, float costoBase) {
 	return nodo;
 }
 
-void altaOpciones(struct opciones **ini){
+void altaOpciones(struct opciones **ini, struct tareas **Ltar){
 	struct opciones *n = NULL, *r = NULL;
     char nombre[50];
     float costoBase;
@@ -89,7 +87,7 @@ void altaOpciones(struct opciones **ini){
 
     }
     
-    
+    altaTarea(Ltar,ultId + 1);
 
    
 
@@ -115,10 +113,10 @@ void recorrer(struct opciones *rc){
 //Listar Opciones
 //id,nombre,hora = duracionTareasH(idOpcion), min = duracionTareasM(idOpcion), costoBase + 20% si "trabajos.altura>=4", materiales.cantidad * stock.precio, trabajos.costoTotal
 
-void listarOpciones(){
+void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock){
 	FILE *arch1;
 	int hora, min;
-	float precioMateriales,costoTotal;
+	float precioMat=0,costoTotal=0;
 	
 	
 	arch1=fopen("opciones.dat","rb");
@@ -130,11 +128,11 @@ void listarOpciones(){
     		printf("\n%d -",opciones.id);
     		printf(" Nombre: ");
     		puts(opciones.nombre);
-    		printf("tiempo estimado: %d:%d",hora = sumaHorasTareas(opciones.id),min = sumaMinutosTareas(opciones.id));
+    		sumaHorasMinutosTareas(opciones.id,Ltar);
     		printf(" Costo: %f",opciones.costoBase);
-    		precioMateriales = precioMateriales(opciones.id);
+    		precioMat = precioMateriales(opciones.id,rMat,rStock);
     		printf(" Costo de materiales: %f",precioMateriales);
-    		costoTotal = costoTotal(opciones.id);
+    		costoTotal = precioMat + opciones.costoBase;
     		printf(" Costo Total: %f",costoTotal);
     		printf("\n----------------");	
 			fread(&opciones, sizeof(opciones),1,arch1);
@@ -142,6 +140,7 @@ void listarOpciones(){
 		fclose(arch1);
 	}
 }
+
 
 float obtenerCostoBase(int idOpcion,struct opciones *r){
 	while(r!=NULL){

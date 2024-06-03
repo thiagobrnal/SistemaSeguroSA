@@ -10,10 +10,28 @@ struct tareas *nuevoNodo(int id, int idOpcion, int orden, struct tiempo duracion
 void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini);
 
 
+// Función para crear un nuevo nodo de la lista doblemente enlazada
+struct tareas* nuevoNodo(int id, int idOpcion, int orden, int hora, int minuto) {
+	
+    struct tareas* nodo = (struct tareas*)malloc(sizeof(struct tareas));
+    
+    if (nodo == NULL) {
+        return NULL;
+    } else {
+        nodo->id = id;
+        nodo->idOpcion = idOpcion;
+        nodo->orden = orden;
+        nodo->duracion.hora = hora;
+        nodo->duracion.minuto = minuto;
+        nodo->ant = NULL;
+        nodo->sgte = NULL;
+    }
+    return nodo;
+}
+
 void altaTarea(struct tareas **ini, int idOpcion) {
     struct tareas *n = NULL;
     int ultId = 0;
-    struct tareas tareas;
 
     FILE *arch1 = fopen("tareas.dat", "a+b");
     if (arch1 == NULL) {
@@ -21,35 +39,37 @@ void altaTarea(struct tareas **ini, int idOpcion) {
         return;
     }
 
-    rewind(arch1);
-    while (fread(&tareas, sizeof(tareas), 1, arch1)) {
+    fread(&tareas, sizeof(tareas), 1, arch1);
+    while (!feof(arch1)) {
         ultId = tareas.id;
+        fread(&tareas, sizeof(tareas), 1, arch1);
     }
 
     tareas.id = ultId + 1;
-
+	fflush(stdin);
+	
+	tareas.idOpcion=idOpcion;
+	fflush(stdin);
+	
     // Leer datos
-    printf("Ingrese el id de la tarea: ");
-    scanf("%d", &tareas.id);
-    
     printf("Ingrese el orden de la tarea: ");
     scanf("%d", &tareas.orden);
+    fflush(stdin);
 
     printf("Ingrese la hora de duracion: ");
     scanf("%d", &tareas.duracion.hora);
+    fflush(stdin);
 
     printf("Ingrese los minutos de duracion: ");
     scanf("%d", &tareas.duracion.minuto);
+    fflush(stdin);
 	
-	printf("Se cargo id desde Opciones: ");
-    tareas.idOpcion=idOpcion;
-
-    fseek(arch1, 0, SEEK_END);
+    
     fwrite(&tareas, sizeof(tareas), 1, arch1);
     printf("\nTarea cargada exitosamente\n");
 
     // Crear el nodo
-    n = nuevoNodo(tareas.id, tareas.idOpcion, tareas.orden, tareas.duracion);
+    n = nuevoNodo(tareas.id, tareas.idOpcion, tareas.orden, tareas.duracion.hora, tareas.duracion.minuto);
     if (n == NULL) {
         printf("No hay memoria.\n");
         fclose(arch1);
@@ -160,7 +180,6 @@ void listarTareas(struct tareas *ini) {
         temp = temp->sgte;
     }
 }
-
 
 // Funcion para calcular la suma de las horas y minutos de las tareas asociadas a un idOpcion
 void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini) {
