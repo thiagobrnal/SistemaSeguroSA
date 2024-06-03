@@ -2,6 +2,10 @@
 #include<stdlib.h>
 #include<string.h>
 
+#include "tareas.h"
+#include "stock.h"
+
+
 //OPCIONES
 void altaOpciones(struct opciones **ini);
 void bajaOpciones();
@@ -9,6 +13,7 @@ void modificarOpciones();
 void listarOpciones();
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
 int obtenerId(struct opciones *r);
+float obtenerCostoBase(int idOpcion,struct opciones *r);
 
 void recorrer(struct opciones *rc);
 
@@ -105,4 +110,45 @@ void recorrer(struct opciones *rc){
 		printf("\n%f", rc->costoBase);
 		rc = rc->sgte;
 	}
+}
+//Listar Opciones
+//id,nombre,hora = duracionTareasH(idOpcion), min = duracionTareasM(idOpcion), costoBase + 20% si "trabajos.altura>=4", materiales.cantidad * stock.precio, trabajos.costoTotal
+
+void listarOpciones(){
+	FILE *arch1;
+	int hora, min;
+	float precioMateriales,costoTotal;
+	
+	
+	arch1=fopen("opciones.dat","rb");
+	if(arch1==NULL){
+		printf("\nError al abrir el archivo opciones.dat");
+	}else{
+		fread(&opciones, sizeof(opciones),1,arch1);
+    	while(!feof(arch1)){
+    		printf("\n%d -",opciones.id);
+    		printf(" Nombre: ");
+    		puts(opciones.nombre);
+    		printf("tiempo estimado: %d:%d",hora = sumaHorasTareas(opciones.id),min = sumaMinutosTareas(opciones.id));
+    		printf(" Costo: %f",opciones.costoBase);
+    		precioMateriales = precioMateriales(opciones.id);
+    		printf(" Costo de materiales: %f",precioMateriales);
+    		costoTotal = costoTotal(opciones.id);
+    		printf(" Costo Total: %f",costoTotal);
+    		printf("\n----------------");	
+			fread(&opciones, sizeof(opciones),1,arch1);
+		}
+		fclose(arch1);
+	}
+}
+
+float obtenerCostoBase(int idOpcion,struct opciones *r){
+	while(r!=NULL){
+		if(idOpcion == r->id){
+			return r->costoBase;
+		}else{
+			r= r->sgte;
+		}
+	}
+	return 0;
 }

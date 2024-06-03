@@ -5,8 +5,10 @@
 
 //includes propios del sistema
 #include "structs.h"
+#include "tareas.h"
 #include "opciones.h"
 #include "stock.h"
+
 
 //Funciones del Menu
 void menuOpciones(struct opciones **);
@@ -136,6 +138,8 @@ void menuOpciones(struct opciones **ini){
 				system("cls");
 				//Listar Opciones
 				recorrer(rc);
+				printf("--------------------------------------------------------------");
+				listarOpciones();
 			break;
 			
 			default:
