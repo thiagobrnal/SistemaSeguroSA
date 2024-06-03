@@ -13,7 +13,7 @@ void altaStock(struct stock **r){
     FILE *archivoStock;
     struct stock temp;
     struct stock *n=NULL;
-	long ultId;
+	int ultId = 0;
 
     if ((archivoStock = fopen("stock.dat", "a+b")) != NULL) {
         // LEER DATOS
@@ -23,15 +23,20 @@ void altaStock(struct stock **r){
 			fread(&temp, sizeof(temp),1,archivoStock);
 		}
 		temp.id = ultId + 1;
+		fflush(stdin);
         printf("Ingrese stock: ");
         scanf("%d", &temp.stock);
+        fflush(stdin);
         printf("Ingrese denominacion: ");
         scanf("%s", temp.denominacion);
+        fflush(stdin);
         printf("Ingrese unidad: ");
         scanf("%s", temp.unidad);
+        fflush(stdin);
         printf("Ingrese precio: ");
         scanf("%f", &temp.precio);
-        
+        fflush(stdin);
+         
         fwrite(&temp, sizeof(struct stock), 1, archivoStock);
 		// CREAR NODO E INSERTARLO
 		    n = (struct stock*)malloc(sizeof(struct stock));
@@ -47,6 +52,7 @@ void altaStock(struct stock **r){
 		        fclose(archivoStock);
 		    } else {
 		        printf("No hay memoria suficiente para cargar los nodos");
+		        fclose(archivoStock);
 		    }
 		
     } else {
@@ -92,4 +98,23 @@ void buscarPrecio(struct stock *r, int dato, int *band,float *precio) {
     }
 }
 
-
+void mostrarStock(struct stock *r){
+	FILE *arch1;
+	arch1=fopen("stock.dat","rb");
+	if(arch1==NULL){
+		printf("\nError al abrir el archivo opciones.dat");
+	}else{
+		fread(&stock, sizeof(stock),1,arch1);
+		while(!feof(arch1)){
+    		printf("\n%d -",stock.id);
+    		printf(" Nombre: ");
+    		puts(stock.denominacion);
+    		printf(" unidad: ");
+    		puts(stock.unidad);
+    		printf(" Stock: %d",stock.stock);
+    		printf(" Precio: %f",stock.precio);
+			fread(&stock, sizeof(stock),1,arch1);
+		}
+		fclose(arch1);
+	}
+}

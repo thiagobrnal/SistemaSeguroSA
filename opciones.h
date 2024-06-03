@@ -87,7 +87,7 @@ void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc
     	char auxiliar, auxiliar2;
     	int idOp = 0;
     	idOp = ultId + 1;
-    	printf("\n\t\tTareas");
+    	printf("\n\t\tTareas\n");
     	do{
     		altaTarea(&(*Ltar),idOp);
     		fflush(stdin);
@@ -98,7 +98,7 @@ void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc
 
     	} while (auxiliar == 'y' || auxiliar == 'Y');
     
-    	printf("\n\t\tMateriales");
+    	printf("\n\t\tMateriales\n");
     	do{
     		altaMateriales(&Lmat,idOp,Rstc);
    		 	fflush(stdin);
@@ -127,8 +127,8 @@ void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *
 		fread(&opciones, sizeof(opciones),1,arch1);
     	while(!feof(arch1)){
     		printf("\n%d -",opciones.id);
-    		printf(" Nombre: ");
-    		puts(opciones.nombre);
+    		printf(" Nombre: %s ",opciones.nombre);
+    		//puts(opciones.nombre);
     		sumaHorasMinutosTareas(opciones.id,Ltar);
     		printf(" Costo: %f",opciones.costoBase);
     		precioMat = precioMateriales(opciones.id,rMat,rStock);
