@@ -7,6 +7,7 @@
 void altaStock(struct stock **r);
 void buscarPrecio(struct stock *r, int dato, int *band, float *precio);
 struct stock* insertarStock(struct stock *r,struct stock *n);
+void listarStock(struct stock *r);
 
 void altaStock(struct stock **r){
     FILE *archivoStock;
@@ -49,6 +50,14 @@ void altaStock(struct stock **r){
     }
 
    
+}
+
+void listarStock(struct stock *r) {
+    if (r != NULL) {
+        listarStock(r->izq);
+        printf("ID=%d, Stock=%d, Denominacion=%s, Unidad=%s, Precio=%.2f\n", r->id, r->stock, r->denominacion, r->unidad, r->precio);
+        listarStock(r->der);
+    }
 }
 
 struct stock* insertarStock(struct stock *r,struct stock *n){
