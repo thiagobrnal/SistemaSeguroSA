@@ -190,13 +190,14 @@ void procMateriales(struct materiales **Lc){
 	int band=0;
 	
 	mat = fopen("materiales.dat","r+b");
+	
 	if(mat==NULL){
 		printf("Error de apertura de archivo materiales.dat");
 		printf("\n");
 	}else{
 		fread(&materiales, sizeof(materiales),1,mat);
 		
-		while((!feof(mat)) || (band!=1)){
+		while((!feof(mat)) && (band!=1)){
 			
 			n = (struct materiales *) malloc(sizeof(struct materiales));			
 			if(n != NULL){
@@ -326,7 +327,7 @@ void procTrabajos(struct trabajos **Ld){
 	} else {
 		fread(&trabajos, sizeof(trabajos),1,trab);
 		
-		while((!feof(trab)) || (band!=1)){
+		while((!feof(trab)) && (band!=1)){
 						
 			n = (struct trabajos *) malloc(sizeof(struct trabajos));			
 			if(n != NULL){

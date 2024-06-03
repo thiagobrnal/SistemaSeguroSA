@@ -5,11 +5,11 @@
 
 
 //OPCIONES
-void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales *Lmat);
+void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales **Lmat);
+struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
 void bajaOpciones();
 void modificarOpciones();
 void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
-struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
 float obtenerCostoBase(int idOpcion,struct opciones *r);
 
 void recorrer(struct opciones *rc);

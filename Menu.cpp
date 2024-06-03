@@ -16,6 +16,7 @@
 
 
 //Funciones del Menu
+
 void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales **Lmat, struct stock *Rstc);
 void menuStockMateriales(struct stock **Rstc);
 void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop);
@@ -33,7 +34,10 @@ int main(){
 	struct clientes *TPclt=NULL;
 	struct tecnicos *Etec=NULL, *Stec=NULL;
 	
+	
 	CARGA(&Lop, &Ltar, &Lmat, &Rstc, &Ltrab, &TPclt, &Etec, &Stec);
+	
+
 	
 	//carga
 	
