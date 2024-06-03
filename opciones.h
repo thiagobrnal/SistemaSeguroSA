@@ -72,6 +72,7 @@ void altaOpciones(struct opciones **ini){
     	n = nuevoNodo(opciones.id, opciones.nombre, opciones.costoBase);
     	if (n == NULL) {
     	    printf("No hay memoria.\n");
+    	    fclose(arch1);
    	     	return;
    		}
 
