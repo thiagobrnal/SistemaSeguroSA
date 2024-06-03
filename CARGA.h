@@ -54,7 +54,7 @@ void procOpciones(struct opciones **La){
 
 	opc = fopen("opciones.dat","r+b");
 	if(opc==NULL){
-		printf("Error de apertura de archivo opciones.dat");
+		printf("Error de apertura de archivo tareas.dat");
 		printf("\n");
 	} else {
 		fread(&opciones, sizeof(opciones),1,opc);
@@ -269,6 +269,7 @@ void procStock(struct stock **R1){
 				strcpy(n->denominacion, stock.denominacion);
 				strcpy(n->unidad, stock.unidad);
 				n->precio = stock.precio;
+				n->stock = stock.stock;
 								
 				*R1 = insertStock(*R1, n);
 				
@@ -320,7 +321,7 @@ void procTrabajos(struct trabajos **Ld){
 	trab = fopen("trabajos.dat", "r+b");
 	
 	if(trab==NULL){
-		printf("Error de apertura de archivo opciones.dat");
+		printf("Error de apertura de archivo trabajos.dat");
 		printf("\n");
 	} else {
 		fread(&trabajos, sizeof(trabajos),1,trab);
