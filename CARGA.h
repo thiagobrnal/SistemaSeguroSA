@@ -5,16 +5,16 @@
 void CARGA(struct opciones **L1, struct tareas **L2, struct materiales **L3, struct stock **R, struct trabajos **L4, struct clientes **TP, struct tecnicos **E, struct tecnicos **S);
 
 void procOpciones(struct opciones **La);
-void insertarOpciones(struct lista **n, struct lista **ini);
-struct lista* buscarAnterior1(int id, struct lista *rc);
+void insertarOpciones(struct opciones **n, struct opciones **ini);
+struct opciones* buscarAnterior1(int id, struct opciones *rc);
 
 void procTareas(struct tareas **Lb);
 void insertarTareas(struct tareas **nv, struct tareas **ini);
-struct lista* buscarAnterior2(int id, struct tareas *rc);
+struct tareas* buscarAnterior2(int id, struct tareas *rc);
 
 void procMateriales(struct materiales **Lc);
-void insertarMat(struct lista **n, struct lista **ini);
-struct lista* buscarAnterior3(int idO, struct lista *rc);
+void insertarMat(struct materiales **n, struct materiales **ini);
+struct materiales* buscarAnterior3(int idO, struct materiales *rc);
 
 void procStock(struct stock **R1);
 struct stock* insertarStock(struct stock *r, struct stock *n);
@@ -25,7 +25,6 @@ struct trabajos* buscarAnterior4(int id, struct trabajos *rc);
 
 void procClientes(struct clientes **TP1);
 void apilarClientes(struct clientes **nv, struct clientes **tope);
-void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnicos **Sa);
 
 void procTecnicos(struct tecnicos **E1, struct tecnicos **S1);
 void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnicos **Sa);
@@ -66,7 +65,7 @@ void procOpciones(struct opciones **La){
 				if(n != NULL){
 					n->sgte = NULL;
 					n->id = opciones.id;
-					n->nombre = opciones.nombre;
+					strcpy(n->nombre, opciones.nombre);
 					n->costoBase = opciones.costoBase;
 					
 					insertarOpciones(&n, &(*La));
@@ -82,7 +81,7 @@ void procOpciones(struct opciones **La){
 			
 void insertarOpciones(struct opciones **n, struct opciones **ini){
 	struct opciones *ant;
-	ant = buscarAnterior((*n)->id, *ini);
+	ant = buscarAnterior1((*n)->id, *ini);
 	
 	if(ant != NULL){
 		(*n)->sgte = ant->sgte;
@@ -147,7 +146,7 @@ void procTareas(struct tareas **Lb){
 void insertarTareas(struct tareas **nv, struct tareas **ini){
 	struct tareas *anterior=NULL, *aux=NULL;
 	
-	anterior = buscarAnterior((*nv)->id, *ini);
+	anterior = buscarAnterior2((*nv)->id, *ini);
 		if(*ini != NULL){
 			if(anterior != NULL){
 				aux = anterior->sgte;
@@ -161,7 +160,7 @@ void insertarTareas(struct tareas **nv, struct tareas **ini){
 			}else{
 				(*nv)->sgte = (*ini);
 				(*ini)->ant = (*nv);
-				(*ini) = nv;							
+				(*ini) = (*nv);							
 			}																								
 		}else{			
 			(*ini) = (*nv);			
@@ -170,8 +169,8 @@ void insertarTareas(struct tareas **nv, struct tareas **ini){
 		(*nv) = NULL;	
 }
 
-struct lista* buscarAnterior2(int id, struct tareas *rc){
-	struct lista *ant=NULL;
+struct tareas* buscarAnterior2(int id, struct tareas *rc){
+	struct tareas *ant=NULL;
 	while(rc != NULL){
 		if(rc->id > id){
 			rc = NULL;
@@ -197,7 +196,7 @@ void procMateriales(struct materiales **Lc){
 	}else{
 		fread(&materiales, sizeof(materiales),1,mat);
 		
-		while((!feof(mat)) || (band<>1)){
+		while((!feof(mat)) || (band!=1)){
 			
 			n = (struct materiales *) malloc(sizeof(struct materiales));			
 			if(n != NULL){
@@ -221,8 +220,8 @@ void procMateriales(struct materiales **Lc){
 	fclose(mat);		
 }	
 
-void insertarMat(struct lista **n, struct lista **ini){
-	struct lista *ant;
+void insertarMat(struct materiales **n, struct materiales **ini){
+	struct materiales *ant;
 	ant = buscarAnterior3((*n)->idOpcion, *ini);
 	
 	if(ant != NULL){
@@ -235,8 +234,8 @@ void insertarMat(struct lista **n, struct lista **ini){
 	*n = NULL;
 }
 
-struct lista* buscarAnterior3(int idO, struct lista *rc){
-	struct lista *ant = NULL;
+struct materiales* buscarAnterior3(int idO, struct materiales *rc){
+	struct materiales *ant = NULL;
 	while(rc != NULL){
 		if(rc->idOpcion > idO){
 			rc = NULL;
@@ -252,6 +251,7 @@ struct lista* buscarAnterior3(int idO, struct lista *rc){
 void procStock(struct stock **R1){
 	FILE *stck=NULL;
 	struct stock *n=NULL;
+	int band=0;
 	
 	stck = fopen("stock.dat","r+b");
 	if(stck==NULL){
@@ -270,7 +270,7 @@ void procStock(struct stock **R1){
 				strcpy(n->unidad, stock.unidad);
 				n->precio = stock.precio;
 								
-				raiz = insertarStock(*R1, n);
+				*R1 = insertarStock(*R1, n);
 				
 												
 			}else{
@@ -325,9 +325,9 @@ void procTrabajos(struct trabajos **Ld){
 	} else {
 		fread(&trabajos, sizeof(trabajos),1,trab);
 		
-		while((!feof(opc)) || (band<>1)){
+		while((!feof(trab)) || (band!=1)){
 						
-			n = (struct opciones *) malloc(sizeof(struct opciones));			
+			n = (struct trabajos *) malloc(sizeof(struct trabajos));			
 			if(n != NULL){
 				n->sgte = NULL;
 				n->id = trabajos.id;
@@ -349,13 +349,13 @@ void procTrabajos(struct trabajos **Ld){
 				band=1;
 			}
 			
-			fread(&trabajos, sizeof(trabajos),1,opc);
+			fread(&trabajos, sizeof(trabajos),1,trab);
 		}
 	}
 }
 
 void insertarTrabajos(struct trabajos **n, struct trabajos **ini){
-	struct opciones *ant;
+	struct trabajos *ant;
 	ant = buscarAnterior4((*n)->id, *ini);
 	
 	if(ant = NULL){
@@ -387,7 +387,7 @@ void procClientes(struct clientes **TP1){
 	struct clientes *p=NULL; 	
 
 	clt = fopen("clientes.dat","r+b");
-	if(opc==NULL){
+	if(clt==NULL){
 		printf("Error de apertura de archivo clientes.dat");
 		printf("\n");
 	} else {
@@ -395,11 +395,13 @@ void procClientes(struct clientes **TP1){
 		
 		while(!feof(clt)){
 						
-			n = (struct clientes *) malloc(sizeof(struct clientes));			
-				if(n != NULL){
-					n->sgte = NULL;
-					
-					
+			p = (struct clientes *) malloc(sizeof(struct clientes));			
+				if(p != NULL){
+					p->sgte = NULL;
+					p->id = clientes.id;
+					p->dni = clientes.dni;
+					strcpy(p->nombre, clientes.nombre);
+										
 					apilarClientes(&p, &(*TP1));
 				}												
 				
@@ -420,7 +422,7 @@ void apilarClientes(struct clientes **nv, struct clientes **tope){
 
 void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 	FILE *tec;
-	struct opciones *n=NULL; 	
+	struct tecnicos *n=NULL; 	
 
 	tec = fopen("tecnicos.dat","r+b");
 	if(tec==NULL){
@@ -434,8 +436,11 @@ void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 			n = (struct tecnicos *) malloc(sizeof(struct tecnicos));			
 				if(n != NULL){
 					n->sgte = NULL;
+					n->id = clientes.id;
+					n->dni = clientes.dni;
+					strcpy(n->nombre, clientes.nombre);
 					
-					encolarTcenicos(&n, &(*E1), &(*S1));
+					encolarTecnicos(&n, &(*E1), &(*S1));
 				}												
 				
 			fread(&tecnicos, sizeof(tecnicos),1,tec);
@@ -448,18 +453,16 @@ void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 
 void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnicos **Sa){
 	
-	if(*En == NULL){
+	if(*Ent == NULL){
 		(*Sa) = (*nv);
 		
 	}else{
-		(*E)->sgte = (*nv);
+		(*Ent)->sgte = (*nv);
 	}
 	
-	(*En) = (*nv);
+	(*Ent) = (*nv);
 	(*nv) = NULL;
-	
-	
-	
+		
 }
 		
 		
