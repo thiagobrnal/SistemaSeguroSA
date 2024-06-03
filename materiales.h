@@ -6,7 +6,7 @@
 
 // Prototipos de funciones
 struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad);
-void altaMateriales(struct materiales **ini);
+void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc);
 void recorrerMateriales(struct materiales *rc);
 void listarMateriales();
 float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
@@ -25,9 +25,9 @@ struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad) {
     return nodo;
 }
 
-void altaMateriales(struct materiales **ini) {
+void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc) {
     struct materiales *n = NULL, *r = NULL;
-
+	int idStock;
     r = (*ini);
 
     FILE *arch1 = fopen("materiales.dat", "a+b");
@@ -35,18 +35,18 @@ void altaMateriales(struct materiales **ini) {
         printf("\nError al abrir el archivo materiales.dat");
     } else {
         // Obtener idOpcion e idStock
-        materiales.idStock = 1;
-        materiales.idOpcion = 2;
         
+        materiales.idOpcion = idOpcion;
+        listarStock(Rstc);
+        scanf("%d",&idStock);
+        
+        materiales.idStock = idStock;
 		fflush(stdin);
 		
         printf("Ingrese la cantidad del material: ");
         scanf("%d", &materiales.cantidad);
         fflush(stdin);
 
-			printf("\nID Stock: %d -", materiales.idStock);
-            printf(" ID Opción: %d", materiales.idOpcion);
-            printf(" Cantidad: %d", materiales.cantidad);
 
 		fwrite(&materiales, sizeof(struct materiales), 1, arch1);
 		printf("\nMaterial cargado exitosamente\n");

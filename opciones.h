@@ -2,15 +2,14 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "materiales.h"
+
 
 //OPCIONES
-void altaOpciones(struct opciones **ini, struct tareas **Ltar);
+void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales *Lmat);
 void bajaOpciones();
 void modificarOpciones();
-void listarOpciones();
+void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
-int obtenerId(struct opciones *r);
 float obtenerCostoBase(int idOpcion,struct opciones *r);
 
 void recorrer(struct opciones *rc);
@@ -30,7 +29,7 @@ struct opciones* nuevoNodo(int id, char* nombre, float costoBase) {
 	return nodo;
 }
 
-void altaOpciones(struct opciones **ini, struct tareas **Ltar){
+void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales *Lmat){
 	struct opciones *n = NULL, *r = NULL;
     char nombre[50];
     float costoBase;
@@ -85,31 +84,33 @@ void altaOpciones(struct opciones **ini, struct tareas **Ltar){
     	}
     	fclose(arch1);
 
-    }
+    	char auxiliar, auxiliar2;
+    	int idOp = 0;
+    	idOp = ultId + 1;
+    	printf("\n\t\tTareas");
+    	do{
+    		altaTarea(&(*Ltar),idOp);
+    		fflush(stdin);
+
+    	    printf("\nDesea ingresar otra tarea? y/n: ");
+   	    	scanf(" %c", &auxiliar);  // El espacio antes de %c es para consumir cualquier carácter de nueva línea residual
+    	    fflush(stdin);
+
+    	} while (auxiliar == 'y' || auxiliar == 'Y');
     
-    altaTarea(Ltar,ultId + 1);
+    	printf("\n\t\tMateriales");
+    	do{
+    		altaMateriales(&Lmat,idOp,Rstc);
+   		 	fflush(stdin);
+		
+    	    printf("\nDesea ingresar otro material? y/n: ");
+    	    scanf(" %c", &auxiliar2);  // El espacio antes de %c es para consumir cualquier carácter de nueva línea residual
+   		    fflush(stdin);
+    	} while (auxiliar2 == 'y' || auxiliar2 == 'Y');
 
-   
-
-}
-
-int obtenerId(struct opciones *r){
-	if (r == NULL) {
-        return 1;
-    }
-    while (r->sgte != NULL) {
-        r = r->sgte;
-    }
-    return r->id + 1;
-	
-}
-
-void recorrer(struct opciones *rc){
-	while(rc != NULL){
-		printf("\n%f", rc->costoBase);
-		rc = rc->sgte;
 	}
 }
+
 //Listar Opciones
 //id,nombre,hora = duracionTareasH(idOpcion), min = duracionTareasM(idOpcion), costoBase + 20% si "trabajos.altura>=4", materiales.cantidad * stock.precio, trabajos.costoTotal
 

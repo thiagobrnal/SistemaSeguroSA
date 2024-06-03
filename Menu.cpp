@@ -7,15 +7,17 @@
 #include "structs.h"
 #include "CARGA.h"
 #include "stock.h"
-#include "opciones.h"
 #include "tareas.h"
 #include "materiales.h"
+#include "opciones.h"
+#include "trabajos.h"
+
 
 
 //Funciones del Menu
-void menuOpciones(struct opciones **, struct tareas **);
-void menuStockMateriales();
-void menuTrabajos();
+void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales *Lmat, struct stock *Rstc);
+void menuStockMateriales(struct stock **Rstc);
+void menuTrabajos(struct trabajos **Ltrab);
 void subMenuTrabajos();
 void menuTecnicos();
 void menuClientes();
@@ -30,9 +32,7 @@ int main(){
 	struct clientes *TPclt=NULL;
 	struct tecnicos *Etec=NULL, *Stec=NULL;
 	
-	void CARGA(&Lop, &Ltar, &Lmat, &Rstc, &Ltrab, &TPclt, &Etec, &Stec);
-		
-	struct opciones *iniOpciones = NULL;
+	CARGA(&Lop, &Ltar, &Lmat, &Rstc, &Ltrab, &TPclt, &Etec, &Stec);
 	
 	//carga
 	
@@ -71,7 +71,7 @@ int main(){
 			break;
 			case '1':
 				//Opciones
-				menuOpciones(&iniOpciones,&Ltar,Lmat,Rstc);
+				menuOpciones(&Lop,&Ltar,Lmat,Rstc);
 			break;
 			case '2':
 				//Stock de Materiales
@@ -79,7 +79,7 @@ int main(){
 			break;
 			case '3':
 				//Trabajos
-				menuTrabajos();
+				menuTrabajos(&Ltrab);
 			break;
 			case '4':
 				//Tecnicos
@@ -134,7 +134,7 @@ void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materi
 			case '1':
 				system("cls");				
 				//Alta Opciones
-				altaOpciones(ini,iniTarea);
+				altaOpciones(&(*ini),&(*iniTarea),Rstc,Lmat);
 			break;
 			
 			case '2':
@@ -150,7 +150,7 @@ void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materi
 			case '4':
 				system("cls");
 				//Listar Opciones
-				listarOpciones(iniTarea,Lmat,Rstc);
+				listarOpciones(*iniTarea,Lmat,Rstc);
 			break;
 			
 			default:
@@ -223,7 +223,7 @@ void menuStockMateriales(struct stock **Rstc){
 	}
 }
 
-void menuTrabajos(){
+void menuTrabajos(struct trabajos **Ltrab){
 	
 	char op;
 	int band = 1;
@@ -257,7 +257,7 @@ void menuTrabajos(){
 			case '1':
 				system("cls");				
 				//Alta Trabajos
-				altaTrabajos(Ltrab);
+				altaTrabajos(&Ltrab);
 			break;
 			
 			case '2':
