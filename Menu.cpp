@@ -194,7 +194,7 @@ void menuStockMateriales(){
 			
 			case '1':
 				system("cls");				
-				altaStock((Rstc));
+				altaStock(Rstc);
 			break;
 			
 			case '2':
