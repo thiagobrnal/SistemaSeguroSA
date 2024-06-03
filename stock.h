@@ -3,14 +3,14 @@
 #include <string.h>
 
 struct stock* insertar(struct stock *r,struct stock *n);
-void altaStock();
+void altaStock(struct stock *r);
 void buscarPrecio(struct stock *r, int dato, int *band, float *precio);
 
-void altaStock() {
+void altaStock(struct stock *r) {
     FILE *archivoStock;
     struct stock temp;
     struct stock *n=NULL;
-    struct stock *r=NULL;
+
 
     if ((archivoStock = fopen("stock.dat", "a+b")) != NULL) {
         // LEER DATOS
