@@ -9,7 +9,7 @@ void listarClientes(struct clientes **tope);
 int vacia(struct clientes *topeP);
 void desapilar(struct clientes **ds, struct clientes **topeP);
 void apilar(struct clientes **nv, struct clientes **topeP);
-
+void bajaclientes(struct clientes **tope);
 
 void altaClientes(struct clientes **tp){
 	FILE *archC=NULL;
@@ -38,6 +38,7 @@ void altaClientes(struct clientes **tp){
 			
 			clientes.id = ultId + 1;
 			fflush(stdin);
+			clientes.estado = 1;
 			clientes.dni = dniAux;
 			fflush(stdin);
 			printf("\nIngrese su nombre y apellido: ");
@@ -51,6 +52,7 @@ void altaClientes(struct clientes **tp){
 		    if (p != NULL) {
 		    	p->sgte = NULL;
 				p->id = clientes.id;
+				p->estado = 1;
 				p->dni = clientes.dni;
 				strcpy(p->nombre, clientes.nombre);
 
@@ -81,11 +83,14 @@ void listarClientes(struct clientes **tope){
 	while(vacia((*tope)) != 1){
 		desapilar(&p, &(*tope));
 		
-		printf("\nID: %d", p->id);
-		printf("\nDNI: %ld",p->dni);
-		printf("\nNombre: ");
-		puts(p->nombre);
-		printf("\n----------------");
+		if(p->estado == 1){
+			printf("\nID: %d", p->id);
+			printf("\nDNI: %ld",p->dni);
+			printf("\nNombre: ");
+			puts(p->nombre);
+			printf("\n----------------");			
+		}
+		
 		
 		apilar(&p, &tp2);				
 	}
@@ -124,3 +129,54 @@ void apilar(struct clientes **nv, struct clientes **topeP){
 	(*topeP) = (*nv);
 	(*nv) = NULL;	
 }
+
+
+void bajaclientes(struct clientes **tope){
+	FILE *archC=NULL;
+	struct clientes *p=NULL, *tp=NULL;
+	int idAux, encontro=0;
+	
+	fflush(stdin);
+	listarClientes(&(*tope));
+	printf("\nIngrese el id del cliente a dar de baja: ");
+	scanf("%d", &idAux);
+	fflush(stdin);
+	
+	archC=fopen("clientes.dat","r+b");
+	if(archC==NULL){
+		printf("\nError al abrir el archivo clientes.dat");
+	}
+	else{	
+		// BUSCAR POR EL ID								
+		fread(&clientes, sizeof(clientes),1,archC);
+			
+		while((!feof(archC))&&(encontro == 0)){
+				
+			if(clientes.id == idAux){
+				clientes.estado = 0;
+				encontro = 1;	
+			}else{
+				fread(&clientes, sizeof(clientes),1,archC);
+			}			
+		}
+								
+			fclose(archC);	
+			
+		while(vacia((*tope)) != 1){
+			desapilar(&p, &(*tope));
+		
+			if(p->id == idAux){
+					p->estado = 0;
+			}
+			
+			apilar(&p, &tp);								
+		}
+			
+		while(vacia(tp) != 1){
+			desapilar(&p, &tp);
+			apilar(&p, &(*tope));		
+		}
+	}						
+}
+
+

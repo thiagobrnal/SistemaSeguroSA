@@ -457,6 +457,7 @@ void menuClientes(struct clientes **tope){
 			case '2':
 				system("cls");
 				//Baja Clientes
+				bajaclientes(&(*tope));
 			break;
 			
 			case '3':

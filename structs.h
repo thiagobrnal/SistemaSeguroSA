@@ -50,7 +50,7 @@ struct trabajos{
 
 //PILA
 struct clientes{
-	int id;
+	int id, estado;
 	long dni;
 	char nombre[50];
 	struct clientes *sgte;
