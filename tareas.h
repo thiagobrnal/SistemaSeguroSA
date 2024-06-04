@@ -90,7 +90,7 @@ void altaTarea(struct tareas **ini, int idOpcion) {
     fclose(arch1);
 }
 
-void bajaTarea(struct tareas **ini, int id) {
+void bajaTarea(struct tareas **ini, int idOp) {
     if (*ini == NULL) {
         printf("La lista de tareas esta vacia.\n");
         return;
@@ -99,13 +99,13 @@ void bajaTarea(struct tareas **ini, int id) {
     struct tareas *actual = *ini;
     struct tareas *anterior = NULL;
 
-    while (actual != NULL && actual->id != id) {
+    while (actual != NULL && actual->id != idOp) {
         anterior = actual;
         actual = actual->sgte;
     }
 
     if (actual == NULL) {
-        printf("La tarea con ID %d no se encontro en la lista.\n", id);
+        printf("La tarea con ID %d no se encontro en la lista.\n", idOp);
         return;
     }
 
@@ -119,7 +119,7 @@ void bajaTarea(struct tareas **ini, int id) {
     }
 
     free(actual);
-    printf("Tarea con ID %d eliminada exitosamente.\n", id);
+    printf("Tarea con ID %d eliminada exitosamente.\n", idOp);
 }
 
 void modificarTarea(struct tareas *ini) {
@@ -148,19 +148,16 @@ void modificarTarea(struct tareas *ini) {
 
     switch (opcion) {
         case 1:
-            printf("Ingrese el nuevo ID de la tarea: ");
-            scanf("%d", &actual->id);
-            break;
-        case 2:
             printf("Ingrese el nuevo orden de la tarea: ");
             scanf("%d", &actual->orden);
             break;
-        case 3:
+        case 2:
             printf("Ingrese la nueva hora de duracion: ");
             scanf("%d", &actual->duracion.hora);
             printf("Ingrese los nuevos minutos de duración: ");
             scanf("%d", &actual->duracion.minuto);
             break;
+            
         default:
             printf("Opcion no valida.\n");
             break;

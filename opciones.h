@@ -130,11 +130,11 @@ void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *
     		printf(" Nombre: %s ",opciones.nombre);
     		//puts(opciones.nombre);
     		sumaHorasMinutosTareas(opciones.id,Ltar);
-    		printf(" Costo: %f",opciones.costoBase);
+    		printf(" Costo: %.2f",opciones.costoBase);
     		precioMat = precioMateriales(opciones.id,rMat,rStock);
-    		printf(" Costo de materiales: %f",precioMat);
+    		printf(" Costo de materiales: %.2f",precioMat);
     		costoTotal = precioMat + opciones.costoBase;
-    		printf(" Costo Total: %f",costoTotal);
+    		printf(" Costo Total: %.2f",costoTotal);
     		printf("\n----------------");	
 			fread(&opciones, sizeof(opciones),1,arch1);
 		}
