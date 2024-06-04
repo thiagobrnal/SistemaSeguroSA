@@ -62,7 +62,7 @@ void altaStock(struct stock **r){
    
 }
 
-void listarStock(struct stock *r) {
+void listarStock(struct stock *r){
     if (r != NULL) {
         listarStock(r->izq);
         printf("ID=%d, Stock=%d, Denominacion=%s, Unidad=%s, Precio=%.2f\n", r->id, r->stock, r->denominacion, r->unidad, r->precio);

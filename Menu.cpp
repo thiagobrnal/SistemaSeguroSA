@@ -402,6 +402,7 @@ void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec ){
 			case '4':
 				system("cls");
 				//Listar Tecnicos
+				listarTecnicos(&(*Etec),&(*Stec));
 			break;
 			
 			default:

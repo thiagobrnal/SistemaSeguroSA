@@ -2,9 +2,11 @@
 #include<stdlib.h>
 #include<string.h>
 
-
 void altaTecnicos(struct tecnicos **e, struct tecnicos **s);
-void encolar(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s);
+void listarTecnicos(struct tecnicos **e, struct tecnicos **s);
+int vaciaTecnicos(struct tecnicos *s);
+void desencolarTecnicos(struct tecnicos **d, struct tecnicos **e, struct tecnicos **s);
+void encolarTecnicosH(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s);
 
 void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     struct tecnicos *n = NULL;
@@ -37,7 +39,7 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
             n->dni = temp.dni;
             strcpy(n->nombre, temp.nombre);
             n->sgte = NULL;
-            encolar(&n,&(*e),&(*s));
+            encolarTecnicosH(&n,&(*e),&(*s));
         } else {
             printf("No hay memoria suficiente para cargar los nodos");
         }
@@ -47,7 +49,46 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     }
 }
 
-void encolar(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s){
+void listarTecnicos(struct tecnicos **e, struct tecnicos **s){
+	 struct tecnicos *n = NULL;
+	 struct tecnicos *eAux=NULL;
+	 struct tecnicos *sAux=NULL;
+ 	 int band= vaciaTecnicos((*s));
+		while(band!=0){
+			desencolarTecnicos(&n,&(*e),&(*s));	
+				printf("ID: %d\n", n->id);
+		        printf("DNI: %ld\n", n->dni);
+		        printf("Nombre: %s\n", n->nombre);		
+			encolarTecnicosH(&n,&eAux,&sAux);
+			band= vaciaTecnicos((*s));
+		}
+		
+		band= vaciaTecnicos(sAux);
+		while(band!=0){
+			desencolarTecnicos(&n,&eAux,&sAux);
+			encolarTecnicosH(&n,&(*e),&(*s));
+			band= vaciaTecnicos(sAux);
+		}
+	
+}
+
+int vaciaTecnicos(struct tecnicos *s){
+	if(s==NULL){
+        return 0;
+    }else{
+        return 1;
+    }
+}
+
+void desencolarTecnicos(struct tecnicos **d, struct tecnicos **e, struct tecnicos **s){
+    (*d) = (*s);
+	(*s)=(*s)->sgte;
+	if (*s == NULL) {
+		(*e) = NULL;
+	}
+}
+
+void encolarTecnicosH(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s){
 	if(*e == NULL) {
 		*s = *n;
 	} else{
