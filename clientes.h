@@ -156,6 +156,8 @@ void bajaclientes(struct clientes **tope){
 				
 			if(clientes.id == idAux){
 				clientes.estado = 0;
+				fseek(archC,sizeof(clientes)*(-1),SEEK_CUR);
+				fwrite(&clientes,sizeof(clientes),1,archC);
 				encontro = 1;	
 			}else{
 				fread(&clientes, sizeof(clientes),1,archC);
@@ -168,10 +170,10 @@ void bajaclientes(struct clientes **tope){
 			desapilar(&p, &(*tope));
 		
 			if(p->id == idAux){
-				p->estado = 0;
-			}
-			
-			apilar(&p, &tp2);								
+				free(p);
+			}else{
+				apilar(&p, &tp2);
+			}											
 		}
 			
 		while(vacia(tp2) != 1){
@@ -239,9 +241,12 @@ void modificarNod(struct clientes **top, int idx){
 			
 					while((!feof(archC))&&(encontro == 0)){
 				
-						if(clientes.id == idx){
+						if(clientes.id == p->id){
 							clientes.dni = p->dni;
 							strcpy(clientes.nombre, p->nombre);
+							
+							fseek(archC,sizeof(clientes)*(-1),SEEK_CUR);
+							fwrite(&clientes,sizeof(clientes),1,archC);
 							encontro = 1;	
 						}else{
 							fread(&clientes, sizeof(clientes),1,archC);

@@ -59,9 +59,10 @@ void procOpciones(struct opciones **La){
 	} else {
 		fread(&opciones, sizeof(opciones),1,opc);
 		
-		while(!feof(opc)){
-						
-			n = (struct opciones *) malloc(sizeof(struct opciones));			
+		while((!feof(opc))){
+			
+			if(opciones.estado == 1){
+				n = (struct opciones *) malloc(sizeof(struct opciones));			
 				if(n != NULL){
 					n->sgte = NULL;
 					n->id = opciones.id;
@@ -69,11 +70,10 @@ void procOpciones(struct opciones **La){
 					n->costoBase = opciones.costoBase;
 					
 					insertarOpciones(&n, &(*La));
-				}												
-				
-			fread(&opciones, sizeof(opciones),1,opc);
-		}
-					
+				}																				
+			}			
+			fread(&opciones, sizeof(opciones),1,opc);				
+		}												
 	}
 	
 	fclose(opc);
@@ -262,23 +262,25 @@ void procStock(struct stock **R1){
 		fread(&stock, sizeof(stock),1,stck);
 		
 		while(!feof(stck)){
-			n = (struct stock *) malloc(sizeof(struct stock));			
-			if(n != NULL){
-				n->izq = NULL;
-				n->der = NULL;
-				n->id = stock.id;
-				strcpy(n->denominacion, stock.denominacion);
-				strcpy(n->unidad, stock.unidad);
-				n->precio = stock.precio;
-				n->stock = stock.stock;
+			
+			if(clientes.estado == 1){
+				n = (struct stock *) malloc(sizeof(struct stock));			
+				if(n != NULL){
+					n->izq = NULL;
+					n->der = NULL;
+					n->id = stock.id;
+					strcpy(n->denominacion, stock.denominacion);
+					strcpy(n->unidad, stock.unidad);
+					n->precio = stock.precio;
+					n->stock = stock.stock;
+					n->estado = stock.estado;
 								
-				*R1 = insertStock(*R1, n);
-				
-												
-			}else{
+					*R1 = insertStock(*R1, n);
+				}else{
 				printf("\nError al crear el nodo, no hay memoria disponible");
 				band=1;
-			}	
+				}			
+			}
 			
 			fread(&stock, sizeof(stock),1,stck);			
 		}		
@@ -396,22 +398,25 @@ void procClientes(struct clientes **TP1){
 		fread(&clientes, sizeof(clientes),1,clt);
 		
 		while(!feof(clt)){
-						
-			p = (struct clientes *) malloc(sizeof(struct clientes));			
+			
+			if(clientes.estado == 1){			
+				p = (struct clientes *) malloc(sizeof(struct clientes));			
 				if(p != NULL){
 					p->sgte = NULL;
 					p->id = clientes.id;
 					p->dni = clientes.dni;
+					p->estado = clientes.estado;
 					strcpy(p->nombre, clientes.nombre);
 										
 					apilarClientes(&p, &(*TP1));
-				}												
+				}
+			}
 				
 			fread(&clientes, sizeof(clientes),1,clt);
 		}
-					
+		fclose(clt);				
 	}	
-	fclose(clt);
+	
 }
 
 void apilarClientes(struct clientes **nv, struct clientes **tope){
@@ -434,16 +439,20 @@ void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 		fread(&tecnicos, sizeof(tecnicos),1,tec);
 		
 		while(!feof(tec)){
-						
-			n = (struct tecnicos *) malloc(sizeof(struct tecnicos));			
+			
+			if(tecnicos.estado == 1){
+				n = (struct tecnicos *) malloc(sizeof(struct tecnicos));			
 				if(n != NULL){
 					n->sgte = NULL;
 					n->id = tecnicos.id;
 					n->dni = tecnicos.dni;
 					strcpy(n->nombre, tecnicos.nombre);
+					n->estado = tecnicos.estado;
 					
 					encolarTecnicos(&n, &(*E1), &(*S1));
-				}												
+				}
+			}			
+															
 				
 			fread(&tecnicos, sizeof(tecnicos),1,tec);
 		}

@@ -100,6 +100,9 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 		while(!feof(tec)){
 				if(tecnicos.id==idAux){
 					tecnicos.estado=0;
+					
+					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
+					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
 				}
 			fread(&tecnicos, sizeof(tecnicos),1,tec);
 		}
@@ -172,6 +175,9 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 											if(tecnicos.id==idAux){
 												tecnicos.dni=n->dni;
 												strcpy(tecnicos.nombre,n->nombre);
+												
+												fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
+												fwrite(&tecnicos,sizeof(tecnicos),1,tec);
 											}
 										fread(&tecnicos, sizeof(tecnicos),1,tec);
 									}

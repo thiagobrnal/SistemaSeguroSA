@@ -137,7 +137,10 @@ void modificarNodo(struct stock *r,int dato){
 							stock.stock=r->stock;
 							strcpy(stock.denominacion,r->denominacion);
 							strcpy(stock.unidad,r->unidad);
-							stock.precio=r->precio;			
+							stock.precio=r->precio;	
+							
+							fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
+							fwrite(&stock,sizeof(stock),1,stck);		
 						}
 						fread(&stock, sizeof(stock),1,stck);			
 					}		
@@ -170,6 +173,8 @@ void bajaStock(struct stock **r){
 		while(!feof(stck)){
 			if(stock.id==idAux){
 					stock.estado=0;
+					fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
+					fwrite(&stock,sizeof(stock),1,stck);
 			}
 			
 			fread(&stock, sizeof(stock),1,stck);			
