@@ -91,13 +91,13 @@ void modificarNodo(struct stock *r,int dato){
 			FILE *stck=NULL;
         	int opcion;
 			do {
-		        printf("\n¿Qué desea modificar?\n");
+		        printf("\n¿Que desea modificar?\n");
 		        printf("1. Stock\n");
-		        printf("2. Denominación\n");
+		        printf("2. Denominacion\n");
 		        printf("3. Unidad\n");
 		        printf("4. Precio\n");
 		        printf("5. Salir\n");
-		        printf("Seleccione una opción: ");
+		        printf("Seleccione una opcion: ");
 		        scanf("%d", &opcion);
 
 		        switch (opcion) {
@@ -106,7 +106,7 @@ void modificarNodo(struct stock *r,int dato){
 		                scanf("%d", &r->stock);
 		                break;
 		            case 2:
-		                printf("Ingrese la nueva denominación: ");
+		                printf("Ingrese la nueva denominacion: ");
 		                scanf("%s", r->denominacion);
 		                break;
 		            case 3:
@@ -118,10 +118,10 @@ void modificarNodo(struct stock *r,int dato){
 		                scanf("%f", &r->precio);
 		                break;
 		            case 5:
-		                printf("Saliendo del menú de modificación.\n");
+		                printf("Saliendo del menú de modificacion.\n");
 		                break;
 		            default:
-		                printf("Opción no válida.\n");
+		                printf("Opcion no valida.\n");
 		                break;
        			}
     		} while (opcion != 5);

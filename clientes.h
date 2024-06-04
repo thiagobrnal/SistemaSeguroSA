@@ -10,6 +10,8 @@ int vacia(struct clientes *topeP);
 void desapilar(struct clientes **ds, struct clientes **topeP);
 void apilar(struct clientes **nv, struct clientes **topeP);
 void bajaclientes(struct clientes **tope);
+void modificarClientes(struct clientes **tope);
+void modificarNod(struct clientes **top, int idx);
 
 void altaClientes(struct clientes **tp){
 	FILE *archC=NULL;
@@ -133,12 +135,12 @@ void apilar(struct clientes **nv, struct clientes **topeP){
 
 void bajaclientes(struct clientes **tope){
 	FILE *archC=NULL;
-	struct clientes *p=NULL, *tp=NULL;
+	struct clientes *p=NULL, *tp2=NULL;
 	int idAux, encontro=0;
 	
 	fflush(stdin);
 	listarClientes(&(*tope));
-	printf("\nIngrese el id del cliente a dar de baja: ");
+	printf("\nIngrese el ID del cliente a dar de baja: ");
 	scanf("%d", &idAux);
 	fflush(stdin);
 	
@@ -166,17 +168,100 @@ void bajaclientes(struct clientes **tope){
 			desapilar(&p, &(*tope));
 		
 			if(p->id == idAux){
-					p->estado = 0;
+				p->estado = 0;
 			}
 			
-			apilar(&p, &tp);								
+			apilar(&p, &tp2);								
 		}
 			
-		while(vacia(tp) != 1){
-			desapilar(&p, &tp);
+		while(vacia(tp2) != 1){
+			desapilar(&p, &tp2);
 			apilar(&p, &(*tope));		
 		}
 	}						
 }
+
+
+void modificarClientes(struct clientes **tope){
+	int idAux=0;
+	
+	listarClientes(&(*tope));
+	fflush(stdin);
+	printf("Ingrese el ID del cliente que desea modificar\n");
+	scanf("%d",&idAux);
+	fflush(stdin);
+	modificarNod(&(*tope),idAux);	
+}
+
+
+void modificarNod(struct clientes **top, int idx){
+	FILE *archC=NULL;
+	struct clientes *p=NULL, *tp2=NULL;
+	int encontro=0;
+	
+	while(vacia((*top)) != 1){
+			desapilar(&p, &(*top));
+		
+			if(p->id == idx){
+				int opcion;
+				do {
+		        	printf("\n¿Que desea modificar?\n");
+		        	printf("1. DNI\n");
+		        	printf("2. Nombre\n");
+		        	printf("3. Salir\n");
+		        	printf("Seleccione una opcion: ");
+		        	scanf("%d", &opcion);
+
+		        	switch (opcion) {
+		            	case 1:
+		                	printf("Ingrese el DNI a modificar: ");
+		                	scanf("%ld", &p->dni);
+		                	break;
+		            	case 2:
+		                	printf("Ingrese el nombre a modificar: ");
+		                	scanf("%s", p->nombre);
+		                	break;
+		            	case 3:
+		                	printf("Saliendo del menu de modificacion.\n");
+		                	break;
+		            	default:
+		                	printf("Opción no válida.\n");
+		                	break;
+       				}
+    			} while (opcion != 3);
+    			
+    			archC=fopen("clientes.dat","r+b");
+				if(archC==NULL){
+					printf("\nError al abrir el archivo clientes.dat");
+				}else{	
+					// BUSCAR POR EL ID								
+					fread(&clientes, sizeof(clientes),1,archC);
+			
+					while((!feof(archC))&&(encontro == 0)){
+				
+						if(clientes.id == idx){
+							clientes.dni = p->dni;
+							strcpy(clientes.nombre, p->nombre);
+							encontro = 1;	
+						}else{
+							fread(&clientes, sizeof(clientes),1,archC);
+						}			
+					} 					
+					fclose(archC);			
+    			}    			
+			}
+			
+			apilar(&p, &tp2);								
+		}
+			
+		while(vacia(tp2) != 1){
+			desapilar(&p, &tp2);
+			apilar(&p, &(*top));		
+		}	
+}
+
+
+
+
 
 

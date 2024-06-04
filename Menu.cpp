@@ -464,6 +464,7 @@ void menuClientes(struct clientes **tope){
 			case '3':
 				system("cls");
 				//Modificacion Clientes
+				modificarClientes(&(*tope));
 			break;
 			
 			case '4':
