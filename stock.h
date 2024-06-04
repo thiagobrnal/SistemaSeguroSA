@@ -11,6 +11,9 @@ void listarStock(struct stock *r);
 void bajaStock(struct stock **r);
 struct stock* borrarNodo(struct stock *bor);
 struct stock* busBor(struct stock *r, int dato);
+void modificarNodo(struct stock *r,int dato);
+void modificarStock(struct stock **r);
+
 
 
 void altaStock(struct stock **r){
@@ -68,6 +71,62 @@ void altaStock(struct stock **r){
     }
 
    
+}
+
+void modificarStock(struct stock **r){
+	int idAux=0;
+	
+	listarStock((*r));
+	printf("Ingrese el ID del stock que desea modificar\n");
+	scanf("%d",&idAux);
+	modificarNodo((*r),idAux);
+	
+	
+}
+
+void modificarNodo(struct stock *r,int dato){
+	if (r != NULL) {
+        modificarNodo(r->izq,dato);
+		if((r->estado==1)&&(r->id==dato)){
+        	int opcion;
+			do {
+		        printf("\n¿Qué desea modificar?\n");
+		        printf("1. Stock\n");
+		        printf("2. Denominación\n");
+		        printf("3. Unidad\n");
+		        printf("4. Precio\n");
+		        printf("5. Salir\n");
+		        printf("Seleccione una opción: ");
+		        scanf("%d", &opcion);
+
+		        switch (opcion) {
+		            case 1:
+		                printf("Ingrese el nuevo stock: ");
+		                scanf("%d", &r->stock);
+		                break;
+		            case 2:
+		                printf("Ingrese la nueva denominación: ");
+		                scanf("%s", r->denominacion);
+		                break;
+		            case 3:
+		                printf("Ingrese la nueva unidad: ");
+		                scanf("%s", r->unidad);
+		                break;
+		            case 4:
+		                printf("Ingrese el nuevo precio: ");
+		                scanf("%f", &r->precio);
+		                break;
+		            case 5:
+		                printf("Saliendo del menú de modificación.\n");
+		                break;
+		            default:
+		                printf("Opción no válida.\n");
+		                break;
+       			}
+    		} while (opcion != 5);
+        }
+        modificarNodo(r->der,dato);
+    }
 }
 
 void bajaStock(struct stock **r){

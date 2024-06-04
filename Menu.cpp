@@ -212,6 +212,7 @@ void menuStockMateriales(struct stock **Rstc){
 			case '3':
 				system("cls");
 				//Modificacion Materiales
+				modificarStock(&(*Rstc));
 			break;
 			
 			case '4':
