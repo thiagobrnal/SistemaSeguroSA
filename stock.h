@@ -88,6 +88,7 @@ void modificarNodo(struct stock *r,int dato){
 	if (r != NULL) {
         modificarNodo(r->izq,dato);
 		if((r->estado==1)&&(r->id==dato)){
+			FILE *stck=NULL;
         	int opcion;
 			do {
 		        printf("\n¿Qué desea modificar?\n");
@@ -124,8 +125,27 @@ void modificarNodo(struct stock *r,int dato){
 		                break;
        			}
     		} while (opcion != 5);
-        }
-        modificarNodo(r->der,dato);
+    		
+			    stck = fopen("stock.dat","r+b");
+				if(stck==NULL){
+					printf("Error de apertura de archivo stock.dat");
+					printf("\n");
+				}else{
+					fread(&stock, sizeof(stock),1,stck);
+					while(!feof(stck)){
+						if(stock.id==r->id){
+							stock.stock=r->stock;
+							strcpy(stock.denominacion,r->denominacion);
+							strcpy(stock.unidad,r->unidad);
+							stock.precio=r->precio;			
+						}
+						fread(&stock, sizeof(stock),1,stck);			
+					}		
+				}
+				
+				fclose(stck);
+		}
+			modificarNodo(r->der,dato);
     }
 }
 
