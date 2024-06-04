@@ -12,7 +12,7 @@ struct tiempo{
 
 //LES
 struct opciones{
-	int id;
+	int id,estado;
 	char nombre[50];
 	float costoBase;
 	struct opciones *sgte;
@@ -20,20 +20,20 @@ struct opciones{
 
 //LDE
 struct tareas{
-	int id, idOpcion,orden;
+	int id, idOpcion,orden,estado;
 	struct tiempo duracion;
 	struct tareas *ant,*sgte;
 }tareas;
 
 //LES
 struct materiales{
-	int idStock, idOpcion, cantidad;
+	int idStock, idOpcion, cantidad,estado;
 	struct materiales *sgte;
 }materiales;
 
 //ARBOL DE BUSQUEDA BINARIA
 struct stock{
-	int id, stock;
+	int id, stock,estado;
 	char denominacion[50], unidad[10];
 	float precio;
 	struct stock *izq, *der;
@@ -58,7 +58,7 @@ struct clientes{
 
 //COLA
 struct tecnicos{
-	int id;
+	int id, estado;
 	long dni;
 	char nombre[50];
 	struct tecnicos *sgte;

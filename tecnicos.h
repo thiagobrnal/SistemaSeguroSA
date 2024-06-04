@@ -7,6 +7,7 @@ void listarTecnicos(struct tecnicos **e, struct tecnicos **s);
 int vaciaTecnicos(struct tecnicos *s);
 void desencolarTecnicos(struct tecnicos **d, struct tecnicos **e, struct tecnicos **s);
 void encolarTecnicosH(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s);
+void bajaTecnicos(struct tecnicos **e, struct tecnicos **s);
 
 void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     struct tecnicos *n = NULL;
@@ -47,6 +48,7 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
            	 	n->dni = temp.dni;
             	strcpy(n->nombre, temp.nombre);
            		n->sgte = NULL;
+           		n->estado=1;
            		encolarTecnicosH(&n,&(*e),&(*s));
        		 }else{
             	printf("No hay memoria suficiente para cargar los nodos");
@@ -61,17 +63,71 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     
 }
 
+void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
+	FILE *tec;	
+	struct tecnicos *n = NULL;
+	struct tecnicos *eAux=NULL;
+	struct tecnicos *sAux=NULL;
+	int idAux=0;
+	
+	listarTecnicos(&(*e),&(*s));
+	printf("Ingrese el ID del tecnico a dar de baja\n");
+	scanf("%d",&idAux);
+	
+	
+	int band= vaciaTecnicos((*s));
+		while(band!=0){
+			desencolarTecnicos(&n,&(*e),&(*s));	
+				if(n->id!=idAux){
+					encolarTecnicosH(&n,&eAux,&sAux);
+				}else{
+					free(n);
+				}
+				band= vaciaTecnicos((*s));			
+		}
+		
+	
+	tec = fopen("tecnicos.dat","r+b");
+	if(tec==NULL){
+		printf("Error de apertura de archivo tecnicos.dat");
+		printf("\n");
+	} else {
+		fread(&tecnicos, sizeof(tecnicos),1,tec);
+		
+		while(!feof(tec)){
+				if(tecnicos.id==idAux){
+					tecnicos.estado=0;
+				}
+			fread(&tecnicos, sizeof(tecnicos),1,tec);
+		}
+					
+	}
+	
+
+	band= vaciaTecnicos(sAux);
+		while(band!=0){
+			desencolarTecnicos(&n,&eAux,&sAux);
+			encolarTecnicosH(&n,&(*e),&(*s));
+			band= vaciaTecnicos(sAux);
+		}
+		
+	fclose(tec);
+}
+
 void listarTecnicos(struct tecnicos **e, struct tecnicos **s){
 	 struct tecnicos *n = NULL;
 	 struct tecnicos *eAux=NULL;
 	 struct tecnicos *sAux=NULL;
+	 
  	 int band= vaciaTecnicos((*s));
 		while(band!=0){
 			desencolarTecnicos(&n,&(*e),&(*s));	
+			if(n->estado==1){
 				printf("\nID: %d", n->id);
 		        printf("\nDNI: %ld", n->dni);
 		        printf("\nNombre: %s", n->nombre);
-				printf("\n----------------");		
+				printf("\n----------------");
+			}		
 			encolarTecnicosH(&n,&eAux,&sAux);
 			band= vaciaTecnicos((*s));
 		}

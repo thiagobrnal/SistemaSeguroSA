@@ -392,6 +392,7 @@ void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec ){
 			case '2':
 				system("cls");
 				//Baja Tecnicos
+				bajaTecnicos(&(*Etec),&(*Stec));
 			break;
 			
 			case '3':
