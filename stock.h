@@ -49,11 +49,13 @@ void altaStock(struct stock **r){
 		        n->der = NULL;
 		        n->izq = NULL;
 		        (*r) = insertarStock(*r, n);
-		        fclose(archivoStock);
+		        
 		    } else {
 		        printf("No hay memoria suficiente para cargar los nodos");
 		        fclose(archivoStock);
 		    }
+		    
+		    fclose(archivoStock);
 		
     } else {
         printf("\nError al abrir el archivo stock.dat");

@@ -463,7 +463,8 @@ void menuClientes(struct clientes **tope){
 			
 			case '4':
 				system("cls");
-				//Listar Clientes
+				//Listar Clientes				
+				listarClientes(&(*tope));
 			break;
 			
 			default:
