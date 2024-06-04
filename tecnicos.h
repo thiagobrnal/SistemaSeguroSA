@@ -33,6 +33,7 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
 			fread(&temp, sizeof(temp),1,archivoTecnicos);
 		}
 		
+		temp.estado=1;
 		temp.id = ultId + 1;
         temp.dni = dniAux;
         printf("Ingrese nombre: ");

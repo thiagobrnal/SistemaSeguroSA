@@ -8,6 +8,10 @@ void altaStock(struct stock **r);
 void buscarPrecio(struct stock *r, int dato, int *band, float *precio);
 struct stock* insertarStock(struct stock *r,struct stock *n);
 void listarStock(struct stock *r);
+void bajaStock(struct stock **r);
+struct stock* borrarNodo(struct stock *bor);
+struct stock* busBor(struct stock *r, int dato);
+
 
 void altaStock(struct stock **r){
     FILE *archivoStock;
@@ -22,6 +26,7 @@ void altaStock(struct stock **r){
 			ultId = temp.id;
 			fread(&temp, sizeof(temp),1,archivoStock);
 		}
+		temp.estado=1;
 		temp.id = ultId + 1;
 		fflush(stdin);
         printf("Ingrese stock: ");
@@ -48,6 +53,7 @@ void altaStock(struct stock **r){
 		        n->precio = temp.precio;
 		        n->der = NULL;
 		        n->izq = NULL;
+		        n->estado=1;
 		        (*r) = insertarStock(*r, n);
 		        
 		    } else {
@@ -64,10 +70,80 @@ void altaStock(struct stock **r){
    
 }
 
+void bajaStock(struct stock **r){
+	FILE *stck=NULL;
+	struct stock *n=NULL;
+	int idAux=0;
+	
+	listarStock((*r));
+	printf("Ingrese el ID del stock a dar de baja\n");
+	scanf("%d",&idAux);
+	(*r)=busBor((*r),idAux);
+	
+	
+	stck = fopen("stock.dat","r+b");
+	if(stck==NULL){
+		printf("Error de apertura de archivo stock.dat");
+		printf("\n");
+	}else{
+		fread(&stock, sizeof(stock),1,stck);
+		
+		while(!feof(stck)){
+			if(stock.id==idAux){
+					stock.estado=0;
+			}
+			
+			fread(&stock, sizeof(stock),1,stck);			
+		}		
+	}
+	
+	fclose(stck);
+}
+
+
+struct stock* busBor(struct stock *r, int dato){
+    if (r != NULL) {
+        if (r->id == dato) {
+            r = borrarNodo(r);
+        } else if (r->id > dato) {
+            r->izq = busBor(r->izq, dato);
+        } else {
+            r->der = busBor(r->der, dato);
+        }
+    } else {
+        printf("No se encontro el dato\n");
+    }
+    return r;
+}
+
+struct stock* borrarNodo(struct stock *bor){
+    struct stock *ant = NULL;
+    struct stock *r = bor->izq;
+    if (r != NULL) {
+        while (r->der != NULL) {
+            ant = r;
+            r = r->der;
+        }
+        r->der = bor->der;
+        if (ant != NULL) {
+            ant->der = r->izq;
+            r->izq = bor->izq;
+        }
+    } else {
+        r = bor->der;
+    }
+    free(bor);
+    printf("Nodo borrado\n");
+    return r;
+}
+
+
 void listarStock(struct stock *r){
     if (r != NULL) {
         listarStock(r->izq);
-        printf("ID=%d, Stock=%d, Denominacion=%s, Unidad=%s, Precio=%.2f\n", r->id, r->stock, r->denominacion, r->unidad, r->precio);
+        if(r->estado==1){
+        	printf("ID=%d, Stock=%d, Denominacion=%s, Unidad=%s, Precio=%.2f\n", r->id, r->stock, r->denominacion, r->unidad, r->precio);	
+        }
         listarStock(r->der);
     }
 }

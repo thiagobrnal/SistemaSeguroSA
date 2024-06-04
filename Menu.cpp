@@ -206,6 +206,7 @@ void menuStockMateriales(struct stock **Rstc){
 			case '2':
 				system("cls");
 				//Baja Materiales
+				bajaStock(&(*Rstc));
 			break;
 			
 			case '3':
