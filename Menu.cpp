@@ -400,6 +400,7 @@ void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec ){
 			case '3':
 				system("cls");
 				//Modificacion Tecnicos
+				modificarTecnicos(&(*Etec),&(*Stec));
 			break;
 			
 			case '4':
