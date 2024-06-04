@@ -438,9 +438,9 @@ void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 			n = (struct tecnicos *) malloc(sizeof(struct tecnicos));			
 				if(n != NULL){
 					n->sgte = NULL;
-					n->id = clientes.id;
-					n->dni = clientes.dni;
-					strcpy(n->nombre, clientes.nombre);
+					n->id = tecnicos.id;
+					n->dni = tecnicos.dni;
+					strcpy(n->nombre, tecnicos.nombre);
 					
 					encolarTecnicos(&n, &(*E1), &(*S1));
 				}												
