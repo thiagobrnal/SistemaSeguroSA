@@ -241,7 +241,7 @@ void modificarNod(struct clientes **top, int idx){
 			
 					while((!feof(archC))&&(encontro == 0)){
 				
-						if(clientes.id == p->id){
+						if(clientes.id == idx){
 							clientes.dni = p->dni;
 							strcpy(clientes.nombre, p->nombre);
 							
