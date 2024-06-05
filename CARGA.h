@@ -202,27 +202,30 @@ void procMateriales(struct materiales **Lc){
 		
 		while((!feof(mat)) && (band!=1)){
 			
-			n = (struct materiales *) malloc(sizeof(struct materiales));			
-			if(n != NULL){
-				n->sgte = NULL;
-				n->idStock = materiales.idStock;
-				n->idOpcion = materiales.idOpcion;
-				n->cantidad = materiales.cantidad;
+			if(materiales.estado==1){
+				n = (struct materiales *) malloc(sizeof(struct materiales));			
+				if(n != NULL){
+					n->sgte = NULL;
+					n->idStock = materiales.idStock;
+					n->idOpcion = materiales.idOpcion;
+					n->cantidad = materiales.cantidad;
+					n->estado = materiales.estado;
 				
-				insertarMat(&n, &(*Lc));
+					insertarMat(&n, &(*Lc));
 				
 				
-			}else{
-				printf("\nError al crear el nodo, no hay memoria disponible");
-				band=1;
+				}else{
+					printf("\nError al crear el nodo, no hay memoria disponible");
+					band=1;
+				}
 			}
 			
 			fread(&materiales, sizeof(materiales),1,mat);			
-		}				
+		}
 	}
 	
 	fclose(mat);		
-}	
+}
 
 void insertarMat(struct materiales **n, struct materiales **ini){
 	struct materiales *ant;

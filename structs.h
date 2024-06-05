@@ -10,6 +10,9 @@ struct tiempo{
 	int hora, minuto;
 }tiempo;
 
+//estado = 1 ACTIVO
+//estado = 0 ELIMINADO/NO ACTIVO
+
 //LES
 struct opciones{
 	int id,estado;

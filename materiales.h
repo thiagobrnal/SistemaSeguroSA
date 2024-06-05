@@ -10,6 +10,8 @@ void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc);
 void recorrerMateriales(struct materiales *rc);
 void listarMateriales();
 float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
+void modificarMaterial(struct materiales *ini,int idOp);
+void bajaMaterial(struct materiales **ini);
 
 
 struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad) {
@@ -20,6 +22,7 @@ struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad) {
         nodo->idStock = idStock;
         nodo->idOpcion = idOpcion;
         nodo->cantidad = cantidad;
+        nodo->estado = 1;
         nodo->sgte = NULL;
     }
     return nodo;
@@ -47,6 +50,7 @@ void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc) {
         scanf("%d", &materiales.cantidad);
         fflush(stdin);
 
+		materiales.estado=1;
 
 		fwrite(&materiales, sizeof(struct materiales), 1, arch1);
 		printf("\nMaterial cargado exitosamente\n");
@@ -80,6 +84,131 @@ void recorrerMateriales(struct materiales *rc) {
     }
 }
 
+void bajaMaterial(struct materiales **ini) {
+    int band = 0;
+
+    if (*ini == NULL) {
+        printf("La lista de materiales está vacía.\n");
+        return;
+    }
+    recorrerMateriales(*ini);
+
+    int idMat;
+    printf("\nIngrese el ID del Stock que desea eliminar: ");
+    scanf("%d", &idMat);
+    fflush(stdin);
+
+    struct materiales *actual = *ini;
+    struct materiales *anterior = NULL;
+
+    while (actual != NULL && actual->idStock != idMat) {
+        anterior = actual;
+        actual = actual->sgte;
+    }
+    if (actual == NULL) {
+        printf("El material con ID %d no se encontró en la lista.\n", idMat);
+        return;
+    }
+
+    FILE *arch1 = fopen("materiales.dat", "r+b");
+    if (arch1 == NULL) {
+        printf("\nError al abrir el archivo materiales.dat");
+        return;
+    } else {
+        fread(&materiales, sizeof(materiales),1,arch1);
+        while (!feof(arch1) && band == 0) {
+            if (materiales.idStock == idMat) {
+                fseek(arch1, sizeof(materiales)*(-1),SEEK_CUR);
+                materiales.estado = 0;
+                fwrite(&materiales, sizeof(materiales),1,arch1);
+                band = 1;
+            } else {
+                fread(&materiales, sizeof(materiales),1,arch1);
+            }
+        }
+        fclose(arch1);
+
+        if (anterior == NULL) {
+            *ini = actual->sgte;
+        } else {
+            anterior->sgte = actual->sgte;
+            actual->sgte = NULL;
+        }
+
+        free(actual);
+    }
+
+    printf("Material con ID de stock %d eliminado exitosamente.\n", idMat);
+}
+
+void modificarMaterial(struct materiales *ini,int idOp) {
+    if (ini == NULL) {
+        printf("La lista de materiales está vacía.\n");
+        return;
+    }
+    recorrerMateriales(ini);
+
+    int idMat;
+    printf("\nIngrese el ID de stock para modificar: ");
+    scanf("%d", &idMat);
+    fflush(stdin);
+
+    struct materiales *actual = ini;
+    while (actual != NULL && actual->idStock != idMat) {
+        actual = actual->sgte;
+    }
+
+    if (actual == NULL) {
+        printf("El material con ID %d no se encontró en la lista.\n", idMat);
+        return;
+    }
+
+    int bandM = 1, band = 0;
+    char opcion;
+    while (bandM != 0) {
+        printf("¿Qué desea modificar?\n");
+        printf("1. Cantidad del material\n");
+        printf("0. Salir\n");
+        printf("Seleccione una opción: ");
+        scanf(" %c", &opcion);
+        fflush(stdin);
+
+        switch (opcion) {
+            case '0':
+                printf("Saliendo del menú de modificación.\n");
+                bandM = 0;
+                break;
+            case '1':
+                printf("Ingrese la nueva cantidad del material: ");
+                scanf("%d", &actual->cantidad);
+                fflush(stdin);
+                break;
+            default:
+                printf("Opción no válida.\n");
+                break;
+        }
+    }
+
+    FILE *arch1 = fopen("materiales.dat", "r+b");
+    if (arch1 == NULL) {
+        printf("\nError al abrir el archivo materiales.dat");
+        return;
+    } else {
+        fread(&materiales, sizeof(materiales), 1, arch1);
+        while (!feof(arch1) && band == 0) {
+            if (materiales.idStock == idMat) {
+                materiales.cantidad = actual->cantidad;
+                fseek(arch1, sizeof(materiales) * (-1), SEEK_CUR);
+                fwrite(&materiales, sizeof(materiales), 1, arch1);
+                band = 1;
+            } else {
+                fread(&materiales, sizeof(materiales), 1, arch1);
+            }
+        }
+        fclose(arch1);
+    }
+}
+
 void listarMateriales() {
     FILE *arch1;
     
@@ -89,11 +218,15 @@ void listarMateriales() {
     } else {
         fread(&materiales, sizeof(struct materiales), 1, arch1);
         while (!feof(arch1)) {
-            printf("\nID Stock: %d -", materiales.idStock);
-            printf(" ID Opción: %d", materiales.idOpcion);
-            printf(" Cantidad: %d", materiales.cantidad);
-            printf("\n----------------");    
-            fread(&materiales, sizeof(struct materiales), 1, arch1);
+        	if(materiales.estado == 1){
+        		printf("\nID Stock: %d -", materiales.idStock);
+            	printf(" ID Opción: %d", materiales.idOpcion);
+            	printf(" Cantidad: %d", materiales.cantidad);
+            	printf("\n----------------");    
+			}
+			fread(&materiales, sizeof(struct materiales), 1, arch1);
+			
+            
         }
         fclose(arch1);
     }

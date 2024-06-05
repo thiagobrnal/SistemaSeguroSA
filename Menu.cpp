@@ -157,6 +157,7 @@ void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materi
 				//Listar Opciones
 				listarOpciones(*iniTarea,*Lmat,Rstc);
 			break;
+
 			
 			default:
 				system("cls");
