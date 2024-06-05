@@ -2,10 +2,10 @@
 #include<stdlib.h>
 #include<string.h>
 
-void altaTarea(struct tareas **inicio, int idOpcion);
-void bajaTarea(struct tareas **inicio, int id);
-void modificarTarea(struct tareas *inicio);
-void listarTareas(struct tareas *inicio);
+void altaTarea(struct tareas **ini, int idOpcion);
+void bajaTarea(struct tareas **ini);
+void modificarTarea(struct tareas *ini, int idOpcion);
+void listarTareas(struct tareas *ini);
 struct tareas *nuevoNodo(int id, int idOpcion, int orden, struct tiempo duracion);
 void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini);
 
@@ -21,6 +21,7 @@ struct tareas* nuevoNodo(int id, int idOpcion, int orden, int hora, int minuto) 
         nodo->id = id;
         nodo->idOpcion = idOpcion;
         nodo->orden = orden;
+        nodo->estado = 1;
         nodo->duracion.hora = hora;
         nodo->duracion.minuto = minuto;
         nodo->ant = NULL;
@@ -63,7 +64,7 @@ void altaTarea(struct tareas **ini, int idOpcion) {
     printf("Ingrese los minutos de duracion: ");
     scanf("%d", &tareas.duracion.minuto);
     fflush(stdin);
-	
+	tareas.estado = 1;
     
     fwrite(&tareas, sizeof(tareas), 1, arch1);
     printf("\nTarea cargada exitosamente\n");
@@ -90,44 +91,72 @@ void altaTarea(struct tareas **ini, int idOpcion) {
     fclose(arch1);
 }
 
-void bajaTarea(struct tareas **ini, int idOp) {
+void bajaTarea(struct tareas **ini) {
+	int band = 0;
+	
     if (*ini == NULL) {
         printf("La lista de tareas esta vacia.\n");
         return;
     }
-
+    listarTareas(*ini);
+	int idTar;
+	printf("\nIngrese el ID que desee eliminar: ");
+	scanf("%d",&idTar);
+	fflush(stdin);
+	
     struct tareas *actual = *ini;
     struct tareas *anterior = NULL;
 
-    while (actual != NULL && actual->id != idOp) {
+    while (actual != NULL && actual->id != idTar) {
         anterior = actual;
         actual = actual->sgte;
     }
-
     if (actual == NULL) {
-        printf("La tarea con ID %d no se encontro en la lista.\n", idOp);
+        printf("La tarea con ID %d no se encontro en la lista.\n", idTar);
         return;
     }
 
-    if (anterior == NULL) {
-        *ini = actual->sgte;
-    } else {
-        anterior->sgte = actual->sgte;
-        if (actual->sgte != NULL) {
-            actual->sgte->ant = anterior;
-        }
-    }
+	FILE *arch1 = fopen("tareas.dat", "r+b");
+	if (arch1 == NULL) {
+        printf("\nError al abrir el archivo tareas.dat");
+        return;
+    }else{
+    	fread(&tareas, sizeof(tareas),1,arch1);
+   		while ((!feof(arch1)) && (band ==0)) {
+   			
+        	if(tareas.id == idTar){
+        		fseek(arch1,sizeof(tareas)*(-1),SEEK_CUR);
+        		tareas.estado = 0;
+				fwrite(&tareas,sizeof(tareas),1,arch1);
+				band=1;
+			}else{
+				fread(&tareas, sizeof(tareas), 1, arch1);	
+			}
+    	}
+		fclose(arch1);
+    	if(anterior == NULL) {
+        	*ini = actual->sgte;
+    	} else {
+    	    anterior->sgte = actual->sgte;
+    	    if (actual->sgte != NULL) {
+        	    actual->sgte->ant = anterior;
+        	}
+    	}
 
-    free(actual);
-    printf("Tarea con ID %d eliminada exitosamente.\n", idOp);
+    	free(actual);
+    	
+	}
+	
+	printf("Tarea con ID %d eliminada exitosamente.\n", idTar);
 }
 
-void modificarTarea(struct tareas *ini) {
+void modificarTarea(struct tareas *ini, int idOp) {
     struct tareas *actual = ini;
     int id = 0;
-
-    printf("Ingrese id para busqueda\n");
+	listarTareas(ini);
+    printf("Ingrese id para modificar\n");
     scanf("%d", &id);
+    fflush(stdin);
 
     while (actual != NULL && actual->id != id) {
         actual = actual->sgte;
@@ -137,31 +166,64 @@ void modificarTarea(struct tareas *ini) {
         printf("La tarea con ID %d no se encontro en la lista.\n", id);
         return;
     }
+	int bandM=1,band=0;
+	char opcion;
+	while (bandM!= 0){
+		
+    	printf("¿Qué desea modificar?\n");
+    	printf("1. Orden de la tarea\n");
+    	printf("2. Duración de la tarea\n");
+    	printf("0. Salir\n");
+    	printf("Seleccione una opción: ");
+    	scanf("%c", &opcion);
+    	fflush(stdin);
 
-    int opcion;
-    printf("¿Qué desea modificar?\n");
-    printf("1. ID de la tarea\n");
-    printf("2. Orden de la tarea\n");
-    printf("3. Duración de la tarea\n");
-    printf("Seleccione una opción: ");
-    scanf("%d", &opcion);
-
-    switch (opcion) {
-        case 1:
-            printf("Ingrese el nuevo orden de la tarea: ");
-            scanf("%d", &actual->orden);
-            break;
-        case 2:
-            printf("Ingrese la nueva hora de duracion: ");
-            scanf("%d", &actual->duracion.hora);
-            printf("Ingrese los nuevos minutos de duración: ");
-            scanf("%d", &actual->duracion.minuto);
-            break;
+   		switch (opcion) {
+    		case'0':
+    			printf("Saliendo del menu de modificacion.\n");
+    			bandM=0;
+    			break;
+        	case '1':
+            	printf("Ingrese el nuevo orden de la tarea: ");
+            	scanf("%d", &actual->orden);
+            	fflush(stdin);
+           		break;
+        	case '2':
+            	printf("Ingrese la nueva hora de duracion: ");
+            	scanf("%d", &actual->duracion.hora);
+            	fflush(stdin);
+            	printf("Ingrese los nuevos minutos de duración: ");
+            	scanf("%d", &actual->duracion.minuto);
+            	fflush(stdin);
+            	break;
             
-        default:
-            printf("Opcion no valida.\n");
-            break;
-    }
+        	default:
+            	printf("Opcion no valida.\n");
+            	break;
+    	}
+	}
+	
+    FILE *arch1 = fopen("tareas.dat", "r+b");
+	if (arch1 == NULL) {
+        printf("\nError al abrir el archivo tareas.dat");
+        return;
+    }else{
+    	fread(&tareas, sizeof(tareas),1,arch1);
+   		while ((!feof(arch1)) && (band ==0)) {
+   			
+        	if(tareas.id == id){
+        		tareas.orden = actual->orden;
+        		tareas.duracion.hora = actual->duracion.hora;
+        		tareas.duracion.minuto = actual->duracion.minuto;
+        		fseek(arch1,sizeof(tareas)*(-1),SEEK_CUR);
+				fwrite(&tareas,sizeof(tareas),1,arch1);
+				band=1;
+			}else{
+				fread(&tareas, sizeof(tareas), 1, arch1);	
+			}
+    	}
+		fclose(arch1);
+	}
 }
 
 void listarTareas(struct tareas *ini) {

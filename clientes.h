@@ -163,8 +163,8 @@ void bajaclientes(struct clientes **tope){
 				fread(&clientes, sizeof(clientes),1,archC);
 			}			
 		}
-								
-			fclose(archC);	
+				
+		fclose(archC);	
 			
 		while(vacia((*tope)) != 1){
 			desapilar(&p, &(*tope));

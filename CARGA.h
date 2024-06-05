@@ -122,18 +122,21 @@ void procTareas(struct tareas **Lb){
 		
 		while(!feof(tar)){
 		
-			n = (struct tareas *) malloc(sizeof(struct tareas));
-			if(n!=NULL){
-				n->ant = NULL;
-				n->sgte = NULL;
-				n->id = tareas.id;
-				n->idOpcion = tareas.idOpcion;
-				n->orden = tareas.orden;
-				n->duracion.hora = tareas.duracion.hora;
-				n->duracion.minuto = tareas.duracion.minuto;
+			if(tareas.estado == 1){
+				n = (struct tareas *) malloc(sizeof(struct tareas));
+				if(n!=NULL){
+					n->ant = NULL;
+					n->sgte = NULL;
+					n->id = tareas.id;
+					n->idOpcion = tareas.idOpcion;
+					n->orden = tareas.orden;
+					n->estado = tareas.estado;
+					n->duracion.hora = tareas.duracion.hora;
+					n->duracion.minuto = tareas.duracion.minuto;
 			
-				insertarTareas(&n, &(*Lb));
+					insertarTareas(&n, &(*Lb));
 								
+				}
 			}
 			
 			fread(&tareas, sizeof(tareas),1,tar);
