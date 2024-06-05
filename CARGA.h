@@ -456,10 +456,10 @@ void procTecnicos(struct tecnicos **E1, struct tecnicos **S1){
 				
 			fread(&tecnicos, sizeof(tecnicos),1,tec);
 		}
-					
+		
+		fclose(tec);			
 	}
 	
-	fclose(tec);
 }	
 
 void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnicos **Sa){

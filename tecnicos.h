@@ -125,7 +125,7 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 	struct tecnicos *n = NULL;
 	struct tecnicos *eAux=NULL;
 	struct tecnicos *sAux=NULL;
-	int idAux=0;
+	int idAux=0, encontro=0;
 	
 	
 	
@@ -171,13 +171,14 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 									printf("\n");
 								} else {
 									fread(&tecnicos, sizeof(tecnicos),1,tec);
-									while(!feof(tec)){
+									while((!feof(tec)) && (encontro == 0)){
 											if(tecnicos.id==idAux){
 												tecnicos.dni=n->dni;
 												strcpy(tecnicos.nombre,n->nombre);
 												
 												fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
 												fwrite(&tecnicos,sizeof(tecnicos),1,tec);
+												encontro = 1;
 											}
 										fread(&tecnicos, sizeof(tecnicos),1,tec);
 									}
