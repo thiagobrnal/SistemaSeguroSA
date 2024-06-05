@@ -85,6 +85,8 @@ void modificarStock(struct stock **r){
 }
 
 void modificarNodo(struct stock *r,int dato){
+	int encontro=0;
+	
 	if (r != NULL) {
         modificarNodo(r->izq,dato);
 		if((r->estado==1)&&(r->id==dato)){
@@ -132,13 +134,13 @@ void modificarNodo(struct stock *r,int dato){
 					printf("\n");
 				}else{
 					fread(&stock, sizeof(stock),1,stck);
-					while(!feof(stck)){
+					while((!feof(stck))&&(encontro==0)){
 						if(stock.id==r->id){
 							stock.stock=r->stock;
 							strcpy(stock.denominacion,r->denominacion);
 							strcpy(stock.unidad,r->unidad);
 							stock.precio=r->precio;	
-							
+							encontro=1;
 							fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
 							fwrite(&stock,sizeof(stock),1,stck);		
 						}
@@ -156,6 +158,7 @@ void bajaStock(struct stock **r){
 	FILE *stck=NULL;
 	struct stock *n=NULL;
 	int idAux=0;
+	int encontro=0;
 	
 	listarStock((*r));
 	printf("Ingrese el ID del stock a dar de baja\n");
@@ -170,9 +173,10 @@ void bajaStock(struct stock **r){
 	}else{
 		fread(&stock, sizeof(stock),1,stck);
 		
-		while(!feof(stck)){
+		while((!feof(stck))&&(encontro==0)){
 			if(stock.id==idAux){
 					stock.estado=0;
+					encontro=1;
 					fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
 					fwrite(&stock,sizeof(stock),1,stck);
 			}
@@ -232,21 +236,30 @@ void listarStock(struct stock *r){
     }
 }
 
-struct stock* insertarStock(struct stock *r,struct stock *n){
-    if (r != NULL) {
-        if (r->id == n->id) {
-            printf("El nodo ya esta en el arbol\n");
-        } else {
-            if (r->id > n->id) {
-                r->izq = insertarStock(r->izq, n);
-            } else {
-                r->der = insertarStock(r->der, n);
-            }
-        }
-    } else {
-        r = n;
-    }
-    return r;
+struct stock* insertarStock(struct stock *r, struct stock *n){
+	
+	if(r != NULL){
+		if(strcmp(r->denominacion, n->denominacion) == 0){
+			if(r->id == n->id){
+				printf("\nEl material ya esta registrado en el stock");
+				
+			}else if(r->id < n->id){
+				r->izq = insertStock(r->izq, n);
+								
+			}else{
+				r->der = insertStock(r->der, n);
+			}
+		}else if(strcmp(r->denominacion, n->denominacion) < 0){
+			r->izq = insertStock(r->izq, n);
+		
+		}else{
+			r->der = insertStock(r->der, n);
+		}
+	}else{
+		r = n;
+	}	
+		
+	return r;
 }
 
 void buscarPrecio(struct stock *r, int dato, int *band,float *precio) {

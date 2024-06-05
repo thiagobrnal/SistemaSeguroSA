@@ -266,7 +266,7 @@ void procStock(struct stock **R1){
 		
 		while(!feof(stck)){
 			
-			if(clientes.estado == 1){
+			if(stock.estado == 1){
 				n = (struct stock *) malloc(sizeof(struct stock));			
 				if(n != NULL){
 					n->izq = NULL;

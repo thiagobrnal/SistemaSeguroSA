@@ -72,10 +72,31 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 	struct tecnicos *eAux=NULL;
 	struct tecnicos *sAux=NULL;
 	int idAux=0;
+	int encontro=0;
 	
 	listarTecnicos(&(*e),&(*s));
 	printf("Ingrese el ID del tecnico a dar de baja\n");
 	scanf("%d",&idAux);
+	
+	tec = fopen("tecnicos.dat","r+b");
+	if(tec==NULL){
+		printf("Error de apertura de archivo tecnicos.dat");
+		printf("\n");
+	} else {
+		fread(&tecnicos, sizeof(tecnicos),1,tec);
+		
+		while((!feof(tec))&&(encontro==0)){
+				if(tecnicos.id==idAux){
+					tecnicos.estado=0;
+					
+					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
+					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
+					encontro=1;
+				}
+			fread(&tecnicos, sizeof(tecnicos),1,tec);
+		}
+					
+	}
 	
 	
 	int band= vaciaTecnicos((*s));
@@ -90,26 +111,6 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 		}
 		
 	
-	tec = fopen("tecnicos.dat","r+b");
-	if(tec==NULL){
-		printf("Error de apertura de archivo tecnicos.dat");
-		printf("\n");
-	} else {
-		fread(&tecnicos, sizeof(tecnicos),1,tec);
-		
-		while(!feof(tec)){
-				if(tecnicos.id==idAux){
-					tecnicos.estado=0;
-					
-					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
-					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
-				}
-			fread(&tecnicos, sizeof(tecnicos),1,tec);
-		}
-					
-	}
-	
-
 	band= vaciaTecnicos(sAux);
 		while(band!=0){
 			desencolarTecnicos(&n,&eAux,&sAux);
@@ -134,7 +135,7 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 	scanf("%d",&idAux);
 	
 	
-	int band= vaciaTecnicos((*s));
+	int band = vaciaTecnicos((*s));
 		while(band!=0){
 			desencolarTecnicos(&n,&(*e),&(*s));	
 				if(n->id==idAux){
@@ -190,14 +191,13 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 				band= vaciaTecnicos((*s));			
 		}
 		
-	band= vaciaTecnicos(sAux);
+	    band = vaciaTecnicos(sAux);
 		while(band!=0){
 			desencolarTecnicos(&n,&eAux,&sAux);
 			encolarTecnicosH(&n,&(*e),&(*s));
-			band= vaciaTecnicos(sAux);
+			band = vaciaTecnicos(sAux);
 		}	
 }
-
 
 void listarTecnicos(struct tecnicos **e, struct tecnicos **s){
 	 struct tecnicos *n = NULL;
