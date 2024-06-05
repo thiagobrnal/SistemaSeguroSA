@@ -472,8 +472,7 @@ void encolarTecnicos(struct tecnicos **nv, struct tecnicos **Ent, struct tecnico
 		
 	}else{
 		(*Ent)->sgte = (*nv);
-	}
-	
+	}	
 	(*Ent) = (*nv);
 	(*nv) = NULL;
 		

@@ -111,6 +111,31 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 		}
 		
 	
+<<<<<<< Updated upstream
+=======
+	tec = fopen("tecnicos.dat","r+b");
+	if(tec==NULL){
+		printf("Error de apertura de archivo tecnicos.dat");
+		printf("\n");
+	} else {
+		fread(&tecnicos, sizeof(tecnicos),1,tec);
+		
+		while(!feof(tec)){
+				if(tecnicos.id==idAux){
+					tecnicos.estado=0;
+					
+					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
+					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
+				}else{
+					fread(&tecnicos, sizeof(tecnicos),1,tec);
+				}
+			
+		}
+					
+	}
+	
+
+>>>>>>> Stashed changes
 	band= vaciaTecnicos(sAux);
 		while(band!=0){
 			desencolarTecnicos(&n,&eAux,&sAux);
@@ -180,8 +205,10 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 												fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
 												fwrite(&tecnicos,sizeof(tecnicos),1,tec);
 												encontro = 1;
+											}else{
+												fread(&tecnicos, sizeof(tecnicos),1,tec);
 											}
-										fread(&tecnicos, sizeof(tecnicos),1,tec);
+										
 									}
 					
 								}
