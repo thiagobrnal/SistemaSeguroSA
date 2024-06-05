@@ -252,5 +252,6 @@ void encolarTecnicosH(struct tecnicos **n, struct tecnicos **e, struct tecnicos 
 		(*e)->sgte = *n;		
 	}
 	(*e) = (*n);
+	(*e)->sgte=NULL;
 	(*n) = NULL;
 }
