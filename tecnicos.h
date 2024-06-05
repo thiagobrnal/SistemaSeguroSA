@@ -67,7 +67,7 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
 }
 
 void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
-	FILE *tec;	
+	FILE *tec=NULL;	
 	struct tecnicos *n = NULL;
 	struct tecnicos *eAux=NULL;
 	struct tecnicos *sAux=NULL;
@@ -75,8 +75,10 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 	int encontro=0;
 	
 	listarTecnicos(&(*e),&(*s));
+	fflush(stdin);
 	printf("Ingrese el ID del tecnico a dar de baja\n");
 	scanf("%d",&idAux);
+	fflush(stdin);
 	
 	tec = fopen("tecnicos.dat","r+b");
 	if(tec==NULL){
@@ -92,10 +94,12 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
 					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
 					encontro=1;
-				}
-			fread(&tecnicos, sizeof(tecnicos),1,tec);
+				}else{
+					fread(&tecnicos, sizeof(tecnicos),1,tec);
+				}			
 		}
-					
+		
+		fclose(tec);			
 	}
 	
 	
@@ -107,43 +111,15 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 				}else{
 					free(n);
 				}
-				band= vaciaTecnicos((*s));			
+				band= vaciaTecnicos((*s));							
 		}
 		
-	
-<<<<<<< Updated upstream
-=======
-	tec = fopen("tecnicos.dat","r+b");
-	if(tec==NULL){
-		printf("Error de apertura de archivo tecnicos.dat");
-		printf("\n");
-	} else {
-		fread(&tecnicos, sizeof(tecnicos),1,tec);
-		
-		while(!feof(tec)){
-				if(tecnicos.id==idAux){
-					tecnicos.estado=0;
-					
-					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
-					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
-				}else{
-					fread(&tecnicos, sizeof(tecnicos),1,tec);
-				}
-			
-		}
-					
-	}
-	
-
->>>>>>> Stashed changes
-	band= vaciaTecnicos(sAux);
+		band= vaciaTecnicos(sAux);
 		while(band!=0){
 			desencolarTecnicos(&n,&eAux,&sAux);
 			encolarTecnicosH(&n,&(*e),&(*s));
 			band= vaciaTecnicos(sAux);
 		}
-		
-	fclose(tec);
 }
 
 void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
