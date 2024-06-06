@@ -9,6 +9,7 @@ void desencolarTecnicos(struct tecnicos **d, struct tecnicos **e, struct tecnico
 void encolarTecnicosH(struct tecnicos **n, struct tecnicos **e, struct tecnicos **s);
 void bajaTecnicos(struct tecnicos **e, struct tecnicos **s);
 void modificarTecnicos(struct tecnicos **e, struct tecnicos **s);
+void buscarDniTecnico(int *encontro,long dniTecnico, int *id);
 
 
 void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
@@ -254,4 +255,27 @@ void encolarTecnicosH(struct tecnicos **n, struct tecnicos **e, struct tecnicos 
 	(*e) = (*n);
 	(*e)->sgte=NULL;
 	(*n) = NULL;
+}
+
+void buscarDniTecnico(int *encontro,long dniTecnico, int *id){
+	FILE *tec=NULL;
+	
+	tec = fopen("tecnicos.dat","r+b");
+		if(tec==NULL){
+			printf("Error de apertura de archivo tecnicos.dat");
+			printf("\n");
+		} else {
+			fread(&tecnicos, sizeof(tecnicos),1,tec);
+			
+			while((!feof(tec))&&(*encontro==0)){
+					if(tecnicos.dni==dniTecnico){
+						(*id)=tecnicos.id;
+						(*encontro)=1;
+					}else{
+						fread(&tecnicos, sizeof(tecnicos),1,tec);
+					}			
+			}
+			
+			fclose(tec);			
+		}
 }

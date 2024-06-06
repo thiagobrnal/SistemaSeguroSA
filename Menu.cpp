@@ -19,8 +19,8 @@
 
 void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales **Lmat, struct stock *Rstc);
 void menuStockMateriales(struct stock **Rstc);
-void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop);
-void subMenuTrabajos();
+void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop, struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope);
+void subMenuTrabajos(struct trabajos **Ltrab);
 void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec);
 void menuClientes(struct clientes **TPclt);
 
@@ -84,7 +84,7 @@ int main(){
 			break;
 			case '3':
 				//Trabajos
-				menuTrabajos(&Ltrab,Ltar,Lmat,Rstc,Lop);
+				menuTrabajos(&Ltrab,Ltar,Lmat,Rstc,Lop,&Etec,&Stec,&TPclt);
 			break;
 			case '4':
 				//Tecnicos
@@ -231,7 +231,7 @@ void menuStockMateriales(struct stock **Rstc){
 	}
 }
 
-void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop){
+void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop, struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope){
 	
 	char op;
 	int band = 1;
@@ -242,7 +242,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 		printf("\t\t\t\tSistemaSeguroSA Trabajos\n");
 		printf("-------------------------------------------------------------------------------\n");
 		printf("1- Alta Trabajos.\n");
-		printf("2- Baja Trabajos.\n");
+		printf("2- Finalizar Trabajos.\n");
 		printf("3- Modificacion Trabajos.\n");
 		printf("4- Listar Trabajos no finalizados.\n");
 		printf("5- Listar Trabajos.\n");
@@ -265,28 +265,31 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 			case '1':
 				system("cls");				
 				//Alta Trabajos
-				altaTrabajos(&(*Ltrab),Ltar,Lmat,Rstc,Lop);
+				altaTrabajos(&(*Ltrab),Ltar,Lmat,Rstc,Lop,&(*Etec),&(*Stec),&(*tope));
 			break;
 			
 			case '2':
 				system("cls");
 				//Baja Trabajos
+				bajaTrabajos(&(*Ltrab));
 			break;
 			
 			case '3':
 				system("cls");
 				//Modificacion Trabajos
+				modificarTrabajos(&(*Ltrab),&(*Etec),&(*Stec));
 			break;
 			
 			case '4':
 				system("cls");
 				//Listar Trabajos no finalizados
+				listarTrabajosNoFinalizados(*Ltrab);
 			break;
 			
 			case '5':
 				system("cls");
 				//Listar Trabajos
-				subMenuTrabajos();
+				subMenuTrabajos(&(*Ltrab));
 			break;
 			
 			default:
@@ -299,7 +302,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 	}
 }
 
-void subMenuTrabajos(){
+void subMenuTrabajos(struct trabajos **Ltrab){
 	
 	char op;
 	int band = 1;
@@ -330,7 +333,9 @@ void subMenuTrabajos(){
 			
 			case '1':
 				system("cls");			
-				//Listar Trabajos	
+				//Listar Trabajos
+				listarTrabajosFinalizados(*Ltrab);
+					
 			break;
 			
 			case '2':

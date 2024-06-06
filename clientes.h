@@ -12,6 +12,7 @@ void apilar(struct clientes **nv, struct clientes **topeP);
 void bajaclientes(struct clientes **tope);
 void modificarClientes(struct clientes **tope);
 void modificarNod(struct clientes **top, int idx);
+void buscarDniCliente(int *encontro, long dniCliente,int *id);
 
 void altaClientes(struct clientes **tp){
 	FILE *archC=NULL;
@@ -265,7 +266,27 @@ void modificarNod(struct clientes **top, int idx){
 		}	
 }
 
-
+void buscarDniCliente(int *encontro, long dniCliente,int *id){
+	FILE *clt=NULL;
+	printf("entro");
+	clt = fopen("clientes.dat","r+b");
+		if(clt==NULL){
+			printf("Error de apertura de archivo clientes.dat");
+			printf("\n");
+		} else {
+			fread(&clientes, sizeof(clientes),1,clt);
+			while((!feof(clt))&&(*encontro==0)){
+				if(clientes.dni==dniCliente){
+					(*id)=clientes.id;			
+					(*encontro)=1;
+				}else{
+					fread(&clientes, sizeof(clientes),1,clt);	
+				}
+			}
+			fclose(clt);				
+		}
+		
+}
 
 
 

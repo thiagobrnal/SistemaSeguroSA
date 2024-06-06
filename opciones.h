@@ -144,11 +144,16 @@ void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *
 
 
 float obtenerCostoBase(int idOpcion,struct opciones *r){
+	float costo=0.0;
+	
 	while(r!=NULL){
 		if(idOpcion == r->id){
-			return r->costoBase;
+			costo=r->costoBase;
+			return costo;
+			
 		}else{
 			r= r->sgte;
+			puts("r->sig");
 		}
 	}
 	return 0;

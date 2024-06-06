@@ -351,6 +351,8 @@ void procTrabajos(struct trabajos **Ld){
 				n->fechaFin.mes = trabajos.fechaFin.mes;
 				n->fechaFin.anio = trabajos.fechaFin.anio;
 				
+				n->costoTotal = trabajos.costoTotal;
+				
 				insertarTrabajos(&n, &(*Ld));
 								
 			}
