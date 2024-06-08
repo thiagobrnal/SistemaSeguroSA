@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <locale.h>
 
 //includes propios del sistema
 #include "structs.h"
@@ -145,11 +146,13 @@ void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materi
 			case '2':
 				system("cls");
 				//Baja Opciones
+				bajaOpcion(&(*ini),*iniTarea,*Lmat,Rstc);
 			break;
 			
 			case '3':
 				system("cls");
 				//Modificacion Opciones
+				modificarOpcion(*ini,*iniTarea,*Lmat,Rstc);
 			break;
 			
 			case '4':

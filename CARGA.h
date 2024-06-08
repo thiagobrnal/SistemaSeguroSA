@@ -68,6 +68,7 @@ void procOpciones(struct opciones **La){
 					n->id = opciones.id;
 					strcpy(n->nombre, opciones.nombre);
 					n->costoBase = opciones.costoBase;
+					n->estado = opciones.estado;
 					
 					insertarOpciones(&n, &(*La));
 				}																				
