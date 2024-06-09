@@ -13,8 +13,9 @@ struct stock* borrarNodo(struct stock *bor);
 struct stock* busBor(struct stock *r, int dato);
 void modificarNodo(struct stock *r,int dato);
 void modificarStock(struct stock **r);
-
-
+void buscarCantidadStock(int idStock, int *cantidadStock);
+void descontarStock(int idStock, int cantidadMateriales);
+void editarArbolStock(struct stock *r, int idStock, int cantidad);
 
 void altaStock(struct stock **r){
     FILE *archivoStock;
@@ -143,8 +144,10 @@ void modificarNodo(struct stock *r,int dato){
 							encontro=1;
 							fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
 							fwrite(&stock,sizeof(stock),1,stck);		
+						}else{
+							fread(&stock, sizeof(stock),1,stck);
 						}
-						fread(&stock, sizeof(stock),1,stck);			
+									
 					}		
 				}
 				
@@ -179,13 +182,16 @@ void bajaStock(struct stock **r){
 					encontro=1;
 					fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
 					fwrite(&stock,sizeof(stock),1,stck);
+			}else{
+				fread(&stock, sizeof(stock),1,stck);
 			}
 			
-			fread(&stock, sizeof(stock),1,stck);			
-		}		
+						
+		}
+		fclose(stck);		
 	}
 	
-	fclose(stck);
+	
 }
 
 
@@ -292,4 +298,71 @@ void mostrarStock(struct stock *r){
 		}
 		fclose(arch1);
 	}
+}
+
+void buscarCantidadStock(int idStock, int *cantidadStock){
+	int encontro=0;
+	
+	FILE *stck = fopen("stock.dat","r+b");
+	if(stck==NULL){
+		printf("Error de apertura de archivo stock.dat");
+		printf("\n");
+	}else{
+		fread(&stock, sizeof(stock),1,stck);
+		
+		while((!feof(stck))&&(encontro==0)){
+			if(stock.id==idStock){
+					(*cantidadStock)=stock.stock;
+					encontro=1;
+			}else{
+				fread(&stock, sizeof(stock),1,stck);
+			}
+			
+						
+		}
+		fclose(stck);		
+	}
+	
+	
+	
+}
+
+void descontarStock(struct stock **r , int idStock, int cantidadMateriales){
+	int encontro=0;
+	
+	FILE *stck = fopen("stock.dat","r+b");
+	if(stck==NULL){
+		printf("Error de apertura de archivo stock.dat");
+		printf("\n");
+	}else{
+		fread(&stock, sizeof(stock),1,stck);
+		
+		while((!feof(stck))&&(encontro==0)){
+			if(stock.id==idStock){
+					stock.stock-=cantidadMateriales;
+					encontro=1;
+					editarArbolStock((*r),stock.id,stock.stock);
+					fseek(stck,sizeof(stock)*(-1),SEEK_CUR);
+					fwrite(&stock,sizeof(stock),1,stck);
+			}else{
+				fread(&stock, sizeof(stock),1,stck);
+			}
+			
+						
+		}
+		fclose(stck);
+	}
+	
+}
+
+void editarArbolStock(struct stock *r, int idStock, int cantidad){
+	if (r != NULL) {
+        editarArbolStock(r->izq,idStock,cantidad);
+        if(r->id==idStock){
+        		r->stock=cantidad;
+        }
+        editarArbolStock(r->der,idStock,cantidad);
+    }
+	
+	
 }

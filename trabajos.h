@@ -13,7 +13,7 @@ void listarTrabajosNoFinalizados(struct trabajos *L );
 float obtenerCostoBase(int idOpcion,struct opciones *r);
 float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
 void listarTrabajosFinalizados(struct trabajos *L);
-void bajaTrabajos(struct trabajos **L);
+void bajaTrabajos(struct trabajos **L, struct stock **R);
 void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos **s);
 
 
@@ -277,9 +277,10 @@ void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos 
 	
 }
 
-void bajaTrabajos(struct trabajos **L){
+void bajaTrabajos(struct trabajos **L, struct stock **R){
 	int idAux=0,encontro=0;
 	FILE *trab;
+	int cantidadMateriales=0 , idStock=0 ,cantidadStock=0 , total=0;
 	
 	listarTrabajosNoFinalizados(*L);
 	printf("\nIngrese el ID del trabajo que desea dar por finalizado");
@@ -287,40 +288,51 @@ void bajaTrabajos(struct trabajos **L){
 	
 	if((trab = fopen("trabajos.dat", "r+b")) != NULL){
 		fread(&trabajos, sizeof(trabajos),1,trab);
-		
 				while((!feof(trab)) && (encontro==0)){
 					if(trabajos.id==idAux){
-						trabajos.finalizado=1;
-						printf("Ingrese dia de finalizacion: ");
-				        scanf("%d", &trabajos.fechaFin.dia);
-				        printf("Ingrese mes de finalizacion: ");
-				        scanf("%d", &trabajos.fechaFin.mes);
-				        printf("Ingrese anio de finalizacion: ");
-				        scanf("%d", &trabajos.fechaFin.anio);
-						encontro=1;
-						fseek(trab,sizeof(trabajos)*(-1),SEEK_CUR);
-						fwrite(&trabajos,sizeof(trabajos),1,trab);
+						buscarCantidadMateriales(trabajos.idOpcion,&idStock,&cantidadMateriales);
+						buscarCantidadStock(idStock , &cantidadStock);
+						total=cantidadStock-cantidadMateriales;
+							if(total>=0){
+								trabajos.finalizado=1;
+								printf("Ingrese dia de finalizacion: ");
+								scanf("%d", &trabajos.fechaFin.dia);
+							    printf("Ingrese mes de finalizacion: ");
+							    scanf("%d", &trabajos.fechaFin.mes);
+							    printf("Ingrese anio de finalizacion: ");
+							    scanf("%d", &trabajos.fechaFin.anio);
+							    descontarStock(&(*R),idStock,cantidadMateriales);
+								encontro=1;
+								struct trabajos *R=*L;
+			
+									while (R != NULL) {
+									    if (R->id == idAux) {
+									        R->finalizado = 1;
+									        R->fechaFin.dia = trabajos.fechaFin.dia;
+									        R->fechaFin.mes = trabajos.fechaFin.mes;
+									        R->fechaFin.anio = trabajos.fechaFin.anio;
+									    }
+								    	R = R->sgte;
+									}
+	
+								fseek(trab,sizeof(trabajos)*(-1),SEEK_CUR);
+								fwrite(&trabajos,sizeof(trabajos),1,trab);
+									
+							}else{
+								printf("\nNo hay suficiente Stock para finalizar el trabajo, por favor reponga el stock para poder finalizar.");
+								break;
+							}
+								
 					}else{
 						fread(&trabajos, sizeof(trabajos),1,trab);
 					}	
 				}
 		fclose(trab);
 	}else{
-		 printf("\nError al abrir el archivo trabajos.dat");
+			printf("\nError al abrir el archivo trabajos.dat");
 	}
-	
-	struct trabajos *R=*L;
-	
-	while (R != NULL) {
-    if (R->id == idAux) {
-        R->finalizado = 1;
-        R->fechaFin.dia = trabajos.fechaFin.dia;
-        R->fechaFin.mes = trabajos.fechaFin.mes;
-        R->fechaFin.anio = trabajos.fechaFin.anio;
-    }
-    R = R->sgte;
-	}
-	
+			
+			
 	
 }
 
