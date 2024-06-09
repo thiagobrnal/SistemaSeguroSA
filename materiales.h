@@ -12,8 +12,8 @@ void listarMateriales();
 float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
 void modificarMaterial(struct materiales *ini,int idOp);
 void bajaMaterial(int idOpcion, struct materiales **ini);
-
 void buscarMaterialesPorId(int idOpcion,struct materiales *rc);
+void buscarCantidadMateriales(int idOpcion, int *idStock, int *cantidadMateriales);
 
 
 struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad) {
@@ -252,6 +252,7 @@ float precioMateriales(int idOp, struct materiales *rMat, struct stock *rStock) 
     return totalPrecio;
 }
 
+
 void buscarMaterialesPorId(int idOpcion,struct materiales *rc) {
 	printf("\n\n\t\tMateriales:");
     while (rc != NULL) {
@@ -261,3 +262,29 @@ void buscarMaterialesPorId(int idOpcion,struct materiales *rc) {
         rc = rc->sgte;
     }
 }
+
+void buscarCantidadMateriales(int idOpcion, int *idStock, int *cantidadMateriales){
+	int band=0;
+	
+	FILE *arch1 = fopen("materiales.dat", "r+b");
+    if (arch1 == NULL) {
+        printf("\nError al abrir el archivo materiales.dat");
+        return;
+    } else {
+        fread(&materiales, sizeof(materiales), 1, arch1);
+        while (!feof(arch1) && band == 0) {
+            if (idOpcion==materiales.idOpcion){
+                (*idStock)=materiales.idStock;
+                (*cantidadMateriales)=materiales.cantidad;
+                band = 1;
+            } else {
+                fread(&materiales, sizeof(materiales), 1, arch1);
+            }
+        }
+        fclose(arch1);
+    }
+	
+
+}
+
+

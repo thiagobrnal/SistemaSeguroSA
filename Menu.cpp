@@ -274,7 +274,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 			case '2':
 				system("cls");
 				//Baja Trabajos
-				bajaTrabajos(&(*Ltrab));
+				bajaTrabajos(&(*Ltrab),&Rstc);
 			break;
 			
 			case '3':

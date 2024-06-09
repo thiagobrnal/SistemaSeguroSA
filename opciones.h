@@ -326,3 +326,11 @@ float obtenerCostoBase(int idOpcion,struct opciones *r){
 	}
 	return costo;
 }
+
+
+
+
+
+
+
+
