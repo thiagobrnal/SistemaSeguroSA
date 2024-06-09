@@ -8,11 +8,12 @@
 void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales **Lmat);
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
 void bajaOpcion(struct opciones **ini, struct tareas **Ltar, struct materiales **rMat, struct stock *rStock);
-void modificarOpcion(struct opciones *ini, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
+void modificarOpcion(struct opciones *ini, struct tareas **Ltar, struct materiales **rMat, struct stock *rStock);
 void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
 float obtenerCostoBase(int idOpcion,struct opciones *r);
 
 void listarOpcionesTarMat(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
+void listarOpcionesTarMatPorId(int idOpc,struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
 
 
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase) {
@@ -173,17 +174,20 @@ void bajaOpcion(struct opciones **ini, struct tareas **Ltar, struct materiales *
     printf("Opción con ID %d eliminada exitosamente.\n", idOp);
 }
 
-void modificarOpcion(struct opciones *ini, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock) {
+void modificarOpcion(struct opciones *ini, struct tareas **Ltar, struct materiales **rMat, struct stock *rStock) {
     if (ini == NULL) {
-        printf("La lista de opciones está vacía.\n");
+        printf("La lista de opciones está vacia.\n");
         return;
     }
-    listarOpciones(Ltar,rMat,rStock);
+    listarOpcionesTarMat(*Ltar,*rMat,rStock);
 
     int idOp;
-    printf("\nIngrese el ID de la opción para modificar: ");
+    printf("\nIngrese el ID de la opcion para modificar (Opcion, Tarea o Material): ");
     scanf("%d", &idOp);
     fflush(stdin);
+    if(idOp == 0){
+    	return;
+	}
 
     struct opciones *actual = ini;
     while (actual != NULL && actual->id != idOp) {
@@ -191,61 +195,163 @@ void modificarOpcion(struct opciones *ini, struct tareas *Ltar, struct materiale
     }
 
     if (actual == NULL) {
-        printf("La opción con ID %d no se encontró en la lista.\n", idOp);
+        printf("La opcion con ID %d no se encontro en la lista.\n", idOp);
         return;
     }
-
-    int bandM = 1, band = 0;
-    char opcion;
-    while (bandM != 0) {
-        printf("¿Qué desea modificar?\n");
-        printf("1. Nombre de la opción\n");
-        printf("2. Costo base de la opción\n");
+    
+    int fBand = 1;
+    char fop;
+    while(fBand != 0){
+    	system("cls");
+    	listarOpcionesTarMatPorId(idOp,*Ltar,*rMat,rStock);
+    	printf("\n¿Que desea modificar de la opcion %d?\n",idOp);
+        printf("1. Opcion\n");
+        printf("2. Tarea\n");
+        printf("3. Material\n");
         printf("0. Salir\n");
-        printf("Seleccione una opción: ");
-        scanf("%c", &opcion);
+        printf("Seleccione una opcion: ");
+        scanf("%c", &fop);
         fflush(stdin);
-
-        switch (opcion) {
+        
+        switch (fop) {
             case '0':
-                printf("Saliendo del menú de modificación.\n");
-                bandM = 0;
+                printf("Saliendo del menu de modificacion.\n");
+                fBand = 0;
                 break;
-            case '1':
-                printf("Ingrese el nuevo nombre de la opción: ");
-                gets(actual->nombre);
-                fflush(stdin);
-                break;
-            case '2':
-                printf("Ingrese el nuevo costo base de la opción: ");
-                scanf("%f", &actual->costoBase);
-                fflush(stdin);
-                break;
-            default:
-                printf("Opción no válida.\n");
-                break;
-        }
-    }
+            case '1':{
+                	int bandOp = 1, band = 0;
+    				char opcion;
+    				while (bandOp != 0) {
+        				printf("\n¿Que desea modificar?\n");
+        				printf("1. Nombre de la opcion\n");
+        				printf("2. Costo base de la opcion\n");
+       					printf("0. Salir\n");
+        				printf("Seleccione una opcion: ");
+        				scanf("%c", &opcion);
+        				fflush(stdin);
 
-    FILE *arch1 = fopen("opciones.dat", "r+b");
-    if (arch1 == NULL) {
-        printf("\nError al abrir el archivo opciones.dat");
-        return;
-    } else {
-        fread(&opciones, sizeof(struct opciones), 1, arch1);
-        while (!feof(arch1) && band == 0) {
-            if (opciones.id == idOp) {
-                strcpy(opciones.nombre, actual->nombre);
-                opciones.costoBase = actual->costoBase;
-                fseek(arch1, sizeof(struct opciones) * (-1), SEEK_CUR);
-                fwrite(&opciones, sizeof(struct opciones), 1, arch1);
-                band = 1;
-            } else {
-                fread(&opciones, sizeof(struct opciones), 1, arch1);
-            }
+        				switch (opcion) {
+            				case '0':
+                				printf("Saliendo del menu de modificacion.\n");
+                				bandOp = 0;
+                			break;
+            				case '1':
+                				printf("Ingrese el nuevo nombre de la opcion: ");
+                				gets(actual->nombre);
+                				fflush(stdin);
+                				break;
+            				case '2':
+                				printf("Ingrese el nuevo costo base de la opcion: ");
+                				scanf("%f", &actual->costoBase);
+                				fflush(stdin);
+                				break;
+            				default:
+                				printf("Opcion no válida.\n");
+                			break;
+        				}
+    			}
+
+    			FILE *arch1 = fopen("opciones.dat", "r+b");
+    			if (arch1 == NULL) {
+        			printf("\nError al abrir el archivo opciones.dat");
+        			return;
+    			} else {
+        			fread(&opciones, sizeof(struct opciones), 1, arch1);
+        			while (!feof(arch1) && band == 0) {
+            			if (opciones.id == idOp) {
+                			strcpy(opciones.nombre, actual->nombre);
+                			opciones.costoBase = actual->costoBase;
+                			fseek(arch1, sizeof(struct opciones) * (-1), SEEK_CUR);
+                			fwrite(&opciones, sizeof(struct opciones), 1, arch1);
+                			band = 1;
+            			} else {
+                			fread(&opciones, sizeof(struct opciones), 1, arch1);
+            			}
+					}
+        			fclose(arch1);
+    			}
+    		}
+                break;
+                
+            case '2':{
+				
+                int tarBand = 1;
+    			char opTar;
+    				while(tarBand != 0){
+    					system("cls");
+    					listarOpcionesTarMatPorId(idOp,*Ltar,*rMat,rStock);
+    					printf("\n¿Que desea hacer en Tareas?\n",idOp);
+        				printf("1. Modificar\n");
+        				printf("2. Eliminar\n");
+        				printf("3. Alta\n");
+        				printf("0. Volver\n");
+        				printf("Seleccione una opcion: ");
+        				scanf("%c", &opTar);
+        				fflush(stdin);
+        				
+        				switch (opTar) {
+            				case '0':
+                				printf("Saliendo del menu de modificacion.\n");
+                				tarBand = 0;
+                			break;
+            				case '1':
+                				modificarTarea(*Ltar,idOp);
+                				break;
+            				case '2':
+                				bajaTarea(idOp,&(*Ltar));
+                				break;
+                			case '3':
+                				altaTarea(&(*Ltar),idOp);
+                			break;
+            				default:
+                				printf("Opcion no válida.\n");
+                			break;
+                		}
+                	}
+            break;
+        	}
+            case '3':{
+                int matBand = 1;
+    			char opMat;
+    				while(matBand != 0){
+    					system("cls");
+    					listarOpcionesTarMatPorId(idOp,*Ltar,*rMat,rStock);
+    					printf("\n¿Que desea hacer en Materiales?\n",idOp);
+        				printf("1. Modificar\n");
+        				printf("2. Eliminar\n");
+        				printf("3. Alta\n");
+        				printf("0. Volver\n");
+        				printf("Seleccione una opcion: ");
+        				scanf("%c", &opMat);
+        				fflush(stdin);
+        				
+        				switch (opMat) {
+            				case '0':
+                				printf("Saliendo del menu de modificacion.\n");
+                				matBand = 0;
+                			break;
+                			case '1':
+                				modificarMaterial(*rMat,idOp);
+                				break;
+            				case '2':
+                				bajaMaterial(idOp,&(*rMat));
+                				break;
+                			case '3':
+                				altaMateriales(&(*rMat),idOp,rStock);
+                			break;
+            				default:
+                				printf("Opcion no válida.\n");
+                			break;
+                		}
+                	}
+            break;
+        	}
+            default:
+                printf("Opcion no válida.\n");
+                break;
         }
-        fclose(arch1);
-    }
+	}
+
 }
 
 //Listar Opciones
@@ -264,6 +370,39 @@ void listarOpcionesTarMat(struct tareas *Ltar, struct materiales *rMat, struct s
 		fread(&opciones, sizeof(opciones),1,arch1);
     	while(!feof(arch1)){
     		if(opciones.estado == 1){
+    			printf("\n%d -",opciones.id);
+    			printf(" Nombre: %s ",opciones.nombre);
+    			sumaHorasMinutosTareas(opciones.id,Ltar);
+    			printf(" Costo: $%.2f",opciones.costoBase);
+    			precioMat = precioMateriales(opciones.id,rMat,rStock);
+    			printf(" Costo de materiales: $%.2f",precioMat);
+    			costoTotal = precioMat + opciones.costoBase;
+    			printf(" Costo Total: $%.2f",costoTotal);
+    			
+    			buscarTareasPorId(opciones.id,Ltar);
+    			buscarMaterialesPorId(opciones.id,rMat);
+    			printf("\n-----------------------------------------------------------------------------------------------");	
+			}
+    		
+			fread(&opciones, sizeof(opciones),1,arch1);
+		}
+		fclose(arch1);
+	}
+}
+
+void listarOpcionesTarMatPorId(int idOpc,struct tareas *Ltar, struct materiales *rMat, struct stock *rStock){
+	FILE *arch1;
+	int hora, min;
+	float precioMat=0,costoTotal=0;
+	
+	
+	arch1=fopen("opciones.dat","rb");
+	if(arch1==NULL){
+		printf("\nError al abrir el archivo opciones.dat");
+	}else{
+		fread(&opciones, sizeof(opciones),1,arch1);
+    	while(!feof(arch1)){
+    		if((opciones.estado == 1) && (opciones.id == idOpc)){
     			printf("\n%d -",opciones.id);
     			printf(" Nombre: %s ",opciones.nombre);
     			sumaHorasMinutosTareas(opciones.id,Ltar);

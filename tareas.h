@@ -163,16 +163,19 @@ void modificarTarea(struct tareas *ini, int idOp) {
     struct tareas *actual = ini;
     int id = 0;
 	listarTareas(ini);
-    printf("Ingrese id para modificar\n");
+    printf("Ingrese id Tarea para modificar\n");
     scanf("%d", &id);
     fflush(stdin);
+    if(id == 0){
+    	return;
+	}
 
-    while (actual != NULL && actual->id != id) {
+    while ((actual != NULL) && (actual->id != id || actual->idOpcion != idOp)) {
         actual = actual->sgte;
     }
 
     if (actual == NULL) {
-        printf("La tarea con ID %d no se encontro en la lista.\n", id);
+        printf("La tarea con ID %d e ID Opcion %d no se encontro en la lista.\n", id,idOp);
         return;
     }
 	int bandM=1,band=0;

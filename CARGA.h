@@ -54,7 +54,7 @@ void procOpciones(struct opciones **La){
 
 	opc = fopen("opciones.dat","r+b");
 	if(opc==NULL){
-		printf("Error de apertura de archivo tareas.dat");
+		printf("Error de apertura de archivo opciones.dat");
 		printf("\n");
 	} else {
 		fread(&opciones, sizeof(opciones),1,opc);

@@ -152,7 +152,7 @@ void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materi
 			case '3':
 				system("cls");
 				//Modificacion Opciones
-				modificarOpcion(*ini,*iniTarea,*Lmat,Rstc);
+				modificarOpcion(*ini,&(*iniTarea),&(*Lmat),Rstc);
 			break;
 			
 			case '4':

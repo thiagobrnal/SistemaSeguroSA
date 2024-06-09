@@ -43,6 +43,7 @@ void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc) {
         
         materiales.idOpcion = idOpcion;
         listarStock(Rstc);
+        printf("\nIngrese el ID del material que quiere agregar:");
         scanf("%d",&idStock);
         
         materiales.idStock = idStock;
@@ -154,14 +155,17 @@ void modificarMaterial(struct materiales *ini,int idOp) {
     printf("\nIngrese el ID de stock para modificar: ");
     scanf("%d", &idMat);
     fflush(stdin);
+    if(idMat == 0){
+    	return;
+	}
 
     struct materiales *actual = ini;
-    while (actual != NULL && actual->idStock != idMat) {
+    while ((actual != NULL) && (actual->idStock != idMat || actual->idOpcion != idOp)) {
         actual = actual->sgte;
     }
 
     if (actual == NULL) {
-        printf("El material con ID %d no se encontró en la lista.\n", idMat);
+        printf("El material con ID %d e ID Opcion %d no se encontro en la lista.\n", idMat,idOp);
         return;
     }
 
