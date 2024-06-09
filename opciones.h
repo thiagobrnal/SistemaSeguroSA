@@ -7,12 +7,13 @@
 //OPCIONES
 void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales **Lmat);
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
-void bajaOpcion(struct opciones **ini, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
+void bajaOpcion(struct opciones **ini, struct tareas **Ltar, struct materiales **rMat, struct stock *rStock);
 void modificarOpcion(struct opciones *ini, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
 void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
 float obtenerCostoBase(int idOpcion,struct opciones *r);
 
-void recorrer(struct opciones *rc);
+void listarOpcionesTarMat(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock);
+
 
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase) {
 	
@@ -113,16 +114,17 @@ void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc
 	}
 }
 
-void bajaOpcion(struct opciones **ini, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock) {
+void bajaOpcion(struct opciones **ini, struct tareas **Ltar, struct materiales **rMat, struct stock *rStock) {
     int band = 0;
 
     if (*ini == NULL) {
         printf("La lista de opciones está vacía.\n");
         return;
     }
-    listarOpciones(Ltar,rMat,rStock);
+    listarOpcionesTarMat(*Ltar,*rMat,rStock);
 
     int idOp;
+    printf("\nADVERTENCIA: Al eliminar una opcion se borran las tareas y materiales relacionadas a esta.");
     printf("\nIngrese el ID de la opción que desea eliminar: ");
     scanf("%d", &idOp);
     fflush(stdin);
@@ -138,6 +140,8 @@ void bajaOpcion(struct opciones **ini, struct tareas *Ltar, struct materiales *r
         printf("La opción con ID %d no se encontró en la lista.\n", idOp);
         return;
     }
+    bajaTarea(idOp,Ltar);
+    bajaMaterial(idOp,rMat);
 
     FILE *arch1 = fopen("opciones.dat", "r+b");
     if (arch1 == NULL) {
@@ -247,6 +251,39 @@ void modificarOpcion(struct opciones *ini, struct tareas *Ltar, struct materiale
 //Listar Opciones
 //id,nombre,hora = duracionTareasH(idOpcion), min = duracionTareasM(idOpcion), costoBase + 20% si "trabajos.altura>=4", materiales.cantidad * stock.precio, trabajos.costoTotal
 
+void listarOpcionesTarMat(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock){
+	FILE *arch1;
+	int hora, min;
+	float precioMat=0,costoTotal=0;
+	
+	
+	arch1=fopen("opciones.dat","rb");
+	if(arch1==NULL){
+		printf("\nError al abrir el archivo opciones.dat");
+	}else{
+		fread(&opciones, sizeof(opciones),1,arch1);
+    	while(!feof(arch1)){
+    		if(opciones.estado == 1){
+    			printf("\n%d -",opciones.id);
+    			printf(" Nombre: %s ",opciones.nombre);
+    			sumaHorasMinutosTareas(opciones.id,Ltar);
+    			printf(" Costo: $%.2f",opciones.costoBase);
+    			precioMat = precioMateriales(opciones.id,rMat,rStock);
+    			printf(" Costo de materiales: $%.2f",precioMat);
+    			costoTotal = precioMat + opciones.costoBase;
+    			printf(" Costo Total: $%.2f",costoTotal);
+    			
+    			buscarTareasPorId(opciones.id,Ltar);
+    			buscarMaterialesPorId(opciones.id,rMat);
+    			printf("\n-----------------------------------------------------------------------------------------------");	
+			}
+    		
+			fread(&opciones, sizeof(opciones),1,arch1);
+		}
+		fclose(arch1);
+	}
+}
+
 void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *rStock){
 	FILE *arch1;
 	int hora, min;
@@ -263,13 +300,12 @@ void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *
     			printf("\n%d -",opciones.id);
     			printf(" Nombre: %s ",opciones.nombre);
     			sumaHorasMinutosTareas(opciones.id,Ltar);
-    			printf(" Costo: %.2f",opciones.costoBase);
+    			printf(" Costo: $%.2f",opciones.costoBase);
     			precioMat = precioMateriales(opciones.id,rMat,rStock);
-    			printf(" Costo de materiales: %.2f",precioMat);
+    			printf(" Costo de materiales: $%.2f",precioMat);
     			costoTotal = precioMat + opciones.costoBase;
-    			printf(" Costo Total: %.2f",costoTotal);
-    			
-    			printf("\n----------------");	
+    			printf(" Costo Total: $%.2f",costoTotal);
+    			printf("\n-----------------------------------------------------------------------------------------------");	
 			}
     		
 			fread(&opciones, sizeof(opciones),1,arch1);
@@ -277,7 +313,6 @@ void listarOpciones(struct tareas *Ltar, struct materiales *rMat, struct stock *
 		fclose(arch1);
 	}
 }
-
 
 float obtenerCostoBase(int idOpcion,struct opciones *r){
 	float costo = 0;

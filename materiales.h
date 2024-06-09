@@ -11,7 +11,9 @@ void recorrerMateriales(struct materiales *rc);
 void listarMateriales();
 float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
 void modificarMaterial(struct materiales *ini,int idOp);
-void bajaMaterial(struct materiales **ini);
+void bajaMaterial(int idOpcion, struct materiales **ini);
+
+void buscarMaterialesPorId(int idOpcion,struct materiales *rc);
 
 
 struct materiales* nuevoNodoMaterial(int idStock, int idOpcion, int cantidad) {
@@ -79,36 +81,21 @@ void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc) {
 
 void recorrerMateriales(struct materiales *rc) {
     while (rc != NULL) {
-        printf("\nID Stock: %d, ID Opción: %d, Cantidad: %d", rc->idStock, rc->idOpcion, rc->cantidad);
+        printf("\nID Stock: %d, ID Opcion: %d, Cantidad: %d", rc->idStock, rc->idOpcion, rc->cantidad);
         rc = rc->sgte;
     }
 }
 
-void bajaMaterial(struct materiales **ini) {
-    int band = 0;
+void bajaMaterial(int idOp, struct materiales **ini) {
+    int materialesEliminados = 0;
 
     if (*ini == NULL) {
         printf("La lista de materiales está vacía.\n");
         return;
     }
-    recorrerMateriales(*ini);
-
-    int idMat;
-    printf("\nIngrese el ID del Stock que desea eliminar: ");
-    scanf("%d", &idMat);
-    fflush(stdin);
-
+    
     struct materiales *actual = *ini;
     struct materiales *anterior = NULL;
-
-    while (actual != NULL && actual->idStock != idMat) {
-        anterior = actual;
-        actual = actual->sgte;
-    }
-    if (actual == NULL) {
-        printf("El material con ID %d no se encontró en la lista.\n", idMat);
-        return;
-    }
 
     FILE *arch1 = fopen("materiales.dat", "r+b");
     if (arch1 == NULL) {
@@ -116,29 +103,44 @@ void bajaMaterial(struct materiales **ini) {
         return;
     } else {
         fread(&materiales, sizeof(materiales),1,arch1);
-        while (!feof(arch1) && band == 0) {
-            if (materiales.idStock == idMat) {
+        while (!feof(arch1)) {
+            if (materiales.idOpcion == idOp) {
                 fseek(arch1, sizeof(materiales)*(-1),SEEK_CUR);
                 materiales.estado = 0;
                 fwrite(&materiales, sizeof(materiales),1,arch1);
-                band = 1;
-            } else {
-                fread(&materiales, sizeof(materiales),1,arch1);
+				fseek(arch1, 0, SEEK_CUR);
             }
+                fread(&materiales, sizeof(materiales),1,arch1);
+            
         }
         fclose(arch1);
 
-        if (anterior == NULL) {
-            *ini = actual->sgte;
-        } else {
-            anterior->sgte = actual->sgte;
-            actual->sgte = NULL;
-        }
+        while (actual != NULL) {
+        if (actual->idOpcion == idOp) {
+            struct materiales *aEliminar = actual;
+            actual = actual->sgte;
 
-        free(actual);
+            if (anterior == NULL) {
+                *ini = aEliminar->sgte;
+            } else {
+                anterior->sgte = aEliminar->sgte;
+            }
+
+            free(aEliminar);
+            materialesEliminados++;
+        } else {
+            anterior = actual;
+            actual = actual->sgte;
+        }
     }
 
-    printf("Material con ID de stock %d eliminado exitosamente.\n", idMat);
+    if (materialesEliminados > 0) {
+        printf("Se eliminaron %d materiales con idOpcion %d.\n", materialesEliminados, idOp);
+    } else {
+        printf("No se encontraron materiales con idOpcion %d.\n", idOp);
+    }
+    }
+
 }
 
 void modificarMaterial(struct materiales *ini,int idOp) {
@@ -220,7 +222,7 @@ void listarMateriales() {
         while (!feof(arch1)) {
         	if(materiales.estado == 1){
         		printf("\nID Stock: %d -", materiales.idStock);
-            	printf(" ID Opción: %d", materiales.idOpcion);
+            	printf(" ID Opcion: %d", materiales.idOpcion);
             	printf(" Cantidad: %d", materiales.cantidad);
             	printf("\n----------------");    
 			}
@@ -250,3 +252,12 @@ float precioMateriales(int idOp, struct materiales *rMat, struct stock *rStock) 
     return totalPrecio;
 }
 
+void buscarMaterialesPorId(int idOpcion,struct materiales *rc) {
+	printf("\n\n\t\tMateriales:");
+    while (rc != NULL) {
+    	if(rc->idOpcion == idOpcion){
+    		printf("\n\tID Stock: %d, ID Opcion: %d, Cantidad: %d", rc->idStock, rc->idOpcion, rc->cantidad);	
+		}
+        rc = rc->sgte;
+    }
+}

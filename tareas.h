@@ -3,11 +3,13 @@
 #include<string.h>
 
 void altaTarea(struct tareas **ini, int idOpcion);
-void bajaTarea(struct tareas **ini);
+void bajaTarea(int idOpcion, struct tareas **ini);
 void modificarTarea(struct tareas *ini, int idOpcion);
 void listarTareas(struct tareas *ini);
 struct tareas *nuevoNodo(int id, int idOpcion, int orden, struct tiempo duracion);
 void sumaHorasMinutosTareas(int idOpcion, struct tareas *ini);
+
+void buscarTareasPorId(int idOpcion,struct tareas *rc);
 
 
 // Función para crear un nuevo nodo de la lista doblemente enlazada
@@ -91,30 +93,18 @@ void altaTarea(struct tareas **ini, int idOpcion) {
     fclose(arch1);
 }
 
-void bajaTarea(struct tareas **ini) {
-	int band = 0;
+void bajaTarea(int idOp, struct tareas **ini) {
+	
+	int tareasEliminadas = 0;
 	
     if (*ini == NULL) {
         printf("La lista de tareas esta vacia.\n");
         return;
     }
-    listarTareas(*ini);
-	int idTar;
-	printf("\nIngrese el ID que desee eliminar: ");
-	scanf("%d",&idTar);
-	fflush(stdin);
 	
     struct tareas *actual = *ini;
     struct tareas *anterior = NULL;
 
-    while (actual != NULL && actual->id != idTar) {
-        anterior = actual;
-        actual = actual->sgte;
-    }
-    if (actual == NULL) {
-        printf("La tarea con ID %d no se encontro en la lista.\n", idTar);
-        return;
-    }
 
 	FILE *arch1 = fopen("tareas.dat", "r+b");
 	if (arch1 == NULL) {
@@ -122,32 +112,51 @@ void bajaTarea(struct tareas **ini) {
         return;
     }else{
     	fread(&tareas, sizeof(tareas),1,arch1);
-   		while ((!feof(arch1)) && (band ==0)) {
+   		while (!feof(arch1)) {
    			
-        	if(tareas.id == idTar){
+        	if(tareas.idOpcion == idOp){
         		fseek(arch1,sizeof(tareas)*(-1),SEEK_CUR);
         		tareas.estado = 0;
 				fwrite(&tareas,sizeof(tareas),1,arch1);
-				band=1;
-			}else{
-				fread(&tareas, sizeof(tareas), 1, arch1);	
+				fseek(arch1, 0, SEEK_CUR);
 			}
+				fread(&tareas, sizeof(tareas), 1, arch1);	
     	}
 		fclose(arch1);
-    	if(anterior == NULL) {
-        	*ini = actual->sgte;
-    	} else {
-    	    anterior->sgte = actual->sgte;
-    	    if (actual->sgte != NULL) {
-        	    actual->sgte->ant = anterior;
-        	}
-    	}
 
-    	free(actual);
+	while (actual != NULL) {
+        if (actual->idOpcion == idOp) {
+            struct tareas *aEliminar = actual;
+            actual = actual->sgte;
+
+            if (anterior == NULL) {
+                *ini = aEliminar->sgte;
+                if (*ini != NULL) {
+                    (*ini)->ant = NULL;
+                }
+            } else {
+                anterior->sgte = aEliminar->sgte;
+                if (aEliminar->sgte != NULL) {
+                    aEliminar->sgte->ant = anterior;
+                }
+            }
+
+            free(aEliminar);
+            tareasEliminadas++;
+        } else {
+            anterior = actual;
+            actual = actual->sgte;
+        }
+    }
+
+    if (tareasEliminadas > 0) {
+        printf("Se eliminaron %d tareas con idOpcion %d.\n", tareasEliminadas, idOp);
+    } else {
+        printf("No se encontraron tareas con idOpcion %d.\n", idOp);
+    }
     	
 	}
 	
-	printf("Tarea con ID %d eliminada exitosamente.\n", idTar);
 }
 
 void modificarTarea(struct tareas *ini, int idOp) {
@@ -232,11 +241,20 @@ void listarTareas(struct tareas *ini) {
         return;
     }
 
-    printf("Lista de tareas:\n");
     struct tareas *temp = ini;
     while (temp != NULL) {
         printf("ID: %d, ID de Opcion: %d, Orden: %d, Duracion: %dh %dm\n", temp->id, temp->idOpcion, temp->orden, temp->duracion.hora, temp->duracion.minuto);
         temp = temp->sgte;
+    }
+}
+
+void buscarTareasPorId(int idOpcion,struct tareas *rc) {
+	printf("\n\n\t\tTareas:");
+    while (rc != NULL) {
+    	if(rc->idOpcion == idOpcion){
+    		printf("\n\tID: %d, ID de Opcion: %d, Orden: %d, Duracion: %dh %dm", rc->id, rc->idOpcion, rc->orden, rc->duracion.hora, rc->duracion.minuto);	
+		}
+        rc = rc->sgte;
     }
 }
 
