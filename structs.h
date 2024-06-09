@@ -67,3 +67,9 @@ struct tecnicos{
 	struct tecnicos *sgte;
 }tecnicos;
 
+//LES
+struct ranking{
+	int idOp, ventas;
+	char nombre[50];
+	struct ranking *sgte;
+}ranking;

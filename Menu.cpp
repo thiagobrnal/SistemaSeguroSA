@@ -21,7 +21,7 @@
 void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales **Lmat, struct stock *Rstc);
 void menuStockMateriales(struct stock **Rstc);
 void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop, struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope);
-void subMenuTrabajos(struct trabajos **Ltrab);
+void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop);
 void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec);
 void menuClientes(struct clientes **TPclt);
 
@@ -292,7 +292,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 			case '5':
 				system("cls");
 				//Listar Trabajos
-				subMenuTrabajos(&(*Ltrab));
+				subMenuTrabajos(&(*Ltrab),Lop);
 			break;
 			
 			default:
@@ -305,7 +305,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 	}
 }
 
-void subMenuTrabajos(struct trabajos **Ltrab){
+void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop){
 	
 	char op;
 	int band = 1;
@@ -344,6 +344,7 @@ void subMenuTrabajos(struct trabajos **Ltrab){
 			case '2':
 				system("cls");
 				//TOP 4
+				crearPunteroRanking(*Ltrab,Lop);
 			break;
 			
 			

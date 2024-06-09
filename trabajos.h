@@ -15,7 +15,7 @@ float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rSto
 void listarTrabajosFinalizados(struct trabajos *L);
 void bajaTrabajos(struct trabajos **L, struct stock **R);
 void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos **s);
-
+void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont);
 
 void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock, struct opciones *r, struct tecnicos **e, struct tecnicos **s, struct clientes **tope ){
     FILE *archivoTrabajos;
@@ -389,3 +389,11 @@ struct trabajos* insertarLES(struct trabajos *L,struct trabajos *nv){
 	return L;
 }
 
+void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont){
+	while(L!=NULL){
+		if(L->idOpcion==id){
+			(*cont)++;
+		}
+		L=L->sgte;	
+	}
+}
