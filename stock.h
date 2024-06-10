@@ -33,9 +33,14 @@ void altaStock(struct stock **r){
 		}
 		temp.estado=1;
 		temp.id = ultId + 1;
-		fflush(stdin);
-        printf("Ingrese stock: ");
-        scanf("%d", &temp.stock);
+		do{
+			fflush(stdin);
+	        printf("Ingrese stock: ");
+	        scanf("%d", &temp.stock);
+	        if(temp.stock<0){
+        		printf("Ingrese un numero valido mayor a 0. Intente de nuevo.\n");
+        	}
+		}while(temp.stock<0);
         fflush(stdin);
         printf("Ingrese denominacion: ");
         fflush(stdin);
@@ -45,9 +50,15 @@ void altaStock(struct stock **r){
         fflush(stdin);
 		gets(temp.unidad);
         fflush(stdin);
-        printf("Ingrese precio: ");
-        scanf("%f", &temp.precio);
-        fflush(stdin);
+        do{
+        	printf("Ingrese precio: ");
+	        scanf("%f", &temp.precio);
+	        fflush(stdin);	
+        	if(temp.precio<0){
+        		printf("Ingrese un numero valido mayor a 0. Intente de nuevo.\n");
+        	}
+        }while(temp.precio<0);
+        
          
         fwrite(&temp, sizeof(struct stock), 1, archivoStock);
 		// CREAR NODO E INSERTARLO
@@ -108,8 +119,14 @@ void modificarNodo(struct stock *r,int dato){
 
 		        switch (opcion) {
 		            case 1:
-		                printf("Ingrese el nuevo stock: ");
-		                scanf("%d", &r->stock);
+		            	do{
+							fflush(stdin);
+					        printf("Ingrese el nuevo stock: ");
+		                	scanf("%d", &r->stock);
+					        if(r->stock<0){
+				        		printf("Ingrese un numero valido mayor a 0. Intente de nuevo.\n");
+				        	}
+						}while(r->stock<0);
 		                break;
 		            case 2:
 		                printf("Ingrese la nueva denominacion: ");
@@ -124,8 +141,14 @@ void modificarNodo(struct stock *r,int dato){
 		                fflush(stdin);
 		                break;
 		            case 4:
-		                printf("Ingrese el nuevo precio: ");
-		                scanf("%f", &r->precio);
+		            	do{
+				        	printf("Ingrese el nuevo precio: ");
+		                	scanf("%f", &r->precio);
+					        fflush(stdin);	
+				        	if(r->precio<0){
+				        		printf("Ingrese un numero valido mayor a 0. Intente de nuevo.\n");
+				        	}
+				        }while(r->precio<0);
 		                break;
 		            case 5:
 		                printf("Saliendo del menú de modificacion.\n");

@@ -503,19 +503,54 @@ void opcionesMasVendidas(struct opciones *L, struct trabajos *Ltrab,struct ranki
 	struct fech fechaFin;
 	do{
 		printf("\nIngrese la fecha de inicio con numeros.");
-		printf("\nDia:");
-		scanf("%d", &fechaInicio.dia);
-		printf("Mes:");
-		scanf("%d", &fechaInicio.mes);
-		printf("A%co:", 164);
-		scanf("%d", &fechaInicio.anio);
-		printf("\nIngrese la fecha de final con numeros.");
-		printf("\nDia:");
-		scanf("%d", &fechaFin.dia);
-		printf("Mes:");
-		scanf("%d", &fechaFin.mes);
-		printf("A%co:", 164);
-		scanf("%d", &fechaFin.anio);
+		    do {
+		        printf("\nDia:");
+		        scanf("%d", &fechaInicio.dia);
+		        if ((fechaInicio.dia > 31) || (fechaInicio.dia < 1)) {
+		            printf("Los dias deben estar entre 1 y 31. Intente de nuevo.\n");
+		        }
+		    } while ((fechaInicio.dia > 31) || (fechaInicio.dia < 1));
+		
+		    do {
+		        printf("\nMes:");
+		        scanf("%d", &fechaInicio.mes);
+		        if ((fechaInicio.mes < 1) || (fechaInicio.mes > 12)) {
+		            printf("Los meses deben estar entre 1 y 12. Intente de nuevo.\n");
+		        }
+		    } while ((fechaInicio.mes < 1) || (fechaInicio.mes > 12));
+		
+		    do {
+		        printf("\nAño:");
+		        scanf("%d", &fechaInicio.anio);
+		        if ((fechaInicio.anio < 2000) || (fechaInicio.anio > 3000)) {
+		            printf("Ingrese un año coherente. Intente de nuevo.\n");
+		        }
+		    } while ((fechaInicio.anio < 2000) || (fechaInicio.anio > 3000));
+	
+	    printf("\nIngrese la fecha de final con numeros.");
+		    do {
+		        printf("\nDia:");
+		        scanf("%d", &fechaFin.dia);
+		        if ((fechaFin.dia > 31) || (fechaFin.dia < 1)) {
+		            printf("Los dias deben estar entre 1 y 31. Intente de nuevo.\n");
+		        }
+		    } while ((fechaFin.dia > 31) || (fechaFin.dia < 1));
+		
+		    do {
+		        printf("\nMes:");
+		        scanf("%d", &fechaFin.mes);
+		        if ((fechaFin.mes < 1) || (fechaFin.mes > 12)) {
+		            printf("Los meses deben estar entre 1 y 12. Intente de nuevo.\n");
+		        }
+		    } while ((fechaFin.mes < 1) || (fechaFin.mes > 12));
+		
+		    do {
+		        printf("\nAño:");
+		        scanf("%d", &fechaFin.anio);
+		        if ((fechaFin.anio < 2000) || (fechaFin.anio > 3000)) {
+		            printf("Ingrese un año coherente. Intente de nuevo.\n");
+		        }
+		    } while ((fechaFin.anio < 2000) || (fechaFin.anio > 3000));
 		
 		fflush(stdin);
 		
