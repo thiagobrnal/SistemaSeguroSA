@@ -227,7 +227,7 @@ void modificarNod(struct clientes **top, int idx){
 		                	printf("Saliendo del menu de modificacion.\n");
 		                	break;
 		            	default:
-		                	printf("Opción no válida.\n");
+		                	printf("Opcion no valida.\n");
 		                	break;
        				}
     			} while (opcion != 3);

@@ -138,11 +138,11 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 				if(n->id==idAux){
 					int opcion;
 						    do {
-						        printf("\n¿Qué desea modificar?\n");
+						        printf("\n¿Que desea modificar?\n");
 						        printf("1. DNI\n");
 						        printf("2. Nombre\n");
 						        printf("3. Salir\n");
-						        printf("Seleccione una opción: ");
+						        printf("Seleccione una opcion: ");
 						        scanf("%d", &opcion);
 						
 						        switch (opcion) {
@@ -155,10 +155,10 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 						                scanf("%s", n->nombre);
 						                break;
 						            case 3:
-						                printf("Saliendo del menú de modificación.\n");
+						                printf("Saliendo del menu de modificacion.\n");
 						                break;
 						            default:
-						                printf("Opción no válida.\n");
+						                printf("Opción no valida.\n");
 						                break;
 						        }
 						    } while (opcion != 3);
