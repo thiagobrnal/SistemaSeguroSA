@@ -7,6 +7,7 @@
 //includes propios del sistema
 #include "structs.h"
 #include "CARGA.h"
+#include "test.h"
 #include "stock.h"
 #include "tareas.h"
 #include "materiales.h"
@@ -14,6 +15,7 @@
 #include "trabajos.h"
 #include "tecnicos.h"
 #include "clientes.h"
+
 
 
 //Funciones del Menu

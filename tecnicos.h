@@ -17,14 +17,7 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
     struct tecnicos temp;
     FILE *archivoTecnicos;
 	int ultId=0;
-	long dniAux;
-	
-	
-	printf("\nIngrese su DNI o 0 para volver: ");
-	while(scanf("%ld", &dniAux) != 1){
-		fflush(stdin);
-		printf(" Valor invalido\n");
-	 }
+	long dniAux = leerDni();
 	
 	if(dniAux != 0){
 		if ((archivoTecnicos = fopen("tecnicos.dat", "a+b")) != NULL) {
@@ -73,36 +66,36 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 	struct tecnicos *n = NULL;
 	struct tecnicos *eAux=NULL;
 	struct tecnicos *sAux=NULL;
-	int idAux=0;
 	int encontro=0;
 	
-	listarTecnicos(&(*e),&(*s));
 	fflush(stdin);
-	printf("Ingrese el ID del tecnico a dar de baja\n");
-	scanf("%d",&idAux);
+	listarTecnicos(&(*e),&(*s));
+		
+	int idAux = leerId(21);
 	fflush(stdin);
 	
-	tec = fopen("tecnicos.dat","r+b");
-	if(tec==NULL){
-		printf("Error de apertura de archivo tecnicos.dat");
-		printf("\n");
-	} else {
-		fread(&tecnicos, sizeof(tecnicos),1,tec);
+	if(idAux!=0){
+			tec = fopen("tecnicos.dat","r+b");
+			if(tec==NULL){
+				printf("Error de apertura de archivo tecnicos.dat");
+				printf("\n");
+			} else {
+				fread(&tecnicos, sizeof(tecnicos),1,tec);
 		
-		while((!feof(tec))&&(encontro==0)){
-				if(tecnicos.id==idAux){
-					tecnicos.estado=0;
+				while((!feof(tec))&&(encontro==0)){
+					if(tecnicos.id==idAux){
+						tecnicos.estado=0;
 					
-					fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
-					fwrite(&tecnicos,sizeof(tecnicos),1,tec);
-					encontro=1;
-				}else{
-					fread(&tecnicos, sizeof(tecnicos),1,tec);
-				}			
-		}
+						fseek(tec,sizeof(tecnicos)*(-1),SEEK_CUR);
+						fwrite(&tecnicos,sizeof(tecnicos),1,tec);
+						encontro=1;
+					}else{
+						fread(&tecnicos, sizeof(tecnicos),1,tec);
+					}			
+				}
 		
-		fclose(tec);			
-	}
+				fclose(tec);			
+			}	
 	
 	
 	int band= vaciaTecnicos((*s));
@@ -122,6 +115,9 @@ void bajaTecnicos(struct tecnicos **e, struct tecnicos **s){
 			encolarTecnicosH(&n,&(*e),&(*s));
 			band= vaciaTecnicos(sAux);
 		}
+		
+	}
+
 }
 
 void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
@@ -129,13 +125,11 @@ void modificarTecnicos(struct tecnicos **e, struct tecnicos **s){
 	struct tecnicos *n = NULL;
 	struct tecnicos *eAux=NULL;
 	struct tecnicos *sAux=NULL;
-	int idAux=0, encontro=0;
-	
-	
-	
+	int encontro=0;
+		
 	listarTecnicos(&(*e),&(*s));
-	printf("Ingrese el ID del tecnico que desea modificar\n");
-	scanf("%d",&idAux);
+	
+	int idAux = leerId(22);
 	
 	
 	int band = vaciaTecnicos((*s));

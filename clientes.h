@@ -17,15 +17,9 @@ void buscarDniCliente(int *encontro, long dniCliente,int *id);
 void altaClientes(struct clientes **tp){
 	FILE *archC=NULL;
 	struct clientes *p=NULL;
-	long dniAux=0;
 	int ultId=0;
+	long dniAux = leerDni();
 	
-	printf("\nIngrese su DNI o 0 para volver: ");
-	while(scanf("%ld", &dniAux) != 1){
-		fflush(stdin);
-		printf(" Valor invalido\n");
-	 }
-	 
 	if(dniAux != 0){
 		archC=fopen("clientes.dat","a+b");
 		if(archC==NULL){
@@ -137,63 +131,68 @@ void apilar(struct clientes **nv, struct clientes **topeP){
 void bajaclientes(struct clientes **tope){
 	FILE *archC=NULL;
 	struct clientes *p=NULL, *tp2=NULL;
-	int idAux, encontro=0;
+	int encontro=0;
 	
 	fflush(stdin);
 	listarClientes(&(*tope));
-	printf("\nIngrese el ID del cliente a dar de baja: ");
-	scanf("%d", &idAux);
+	
+	int idAux = leerId(11);
 	fflush(stdin);
 	
-	archC=fopen("clientes.dat","r+b");
-	if(archC==NULL){
-		printf("\nError al abrir el archivo clientes.dat");
-	}
-	else{	
-		// BUSCAR POR EL ID								
-		fread(&clientes, sizeof(clientes),1,archC);
-			
-		while((!feof(archC))&&(encontro == 0)){
-				
-			if(clientes.id == idAux){
-				clientes.estado = 0;
-				fseek(archC,sizeof(clientes)*(-1),SEEK_CUR);
-				fwrite(&clientes,sizeof(clientes),1,archC);
-				encontro = 1;	
-			}else{
-				fread(&clientes, sizeof(clientes),1,archC);
-			}			
+	if(idAux != 0){
+		archC=fopen("clientes.dat","r+b");
+		if(archC==NULL){
+			printf("\nError al abrir el archivo clientes.dat");
 		}
-				
-		fclose(archC);	
+		else{	
+			// BUSCAR POR EL ID								
+			fread(&clientes, sizeof(clientes),1,archC);
 			
-		while(vacia((*tope)) != 1){
-			desapilar(&p, &(*tope));
+			while((!feof(archC))&&(encontro == 0)){
+				
+				if(clientes.id == idAux){
+					clientes.estado = 0;
+					fseek(archC,sizeof(clientes)*(-1),SEEK_CUR);
+					fwrite(&clientes,sizeof(clientes),1,archC);
+					encontro = 1;	
+				}else{
+					fread(&clientes, sizeof(clientes),1,archC);
+				}			
+			}
+				
+			fclose(archC);	
+			
+			while(vacia((*tope)) != 1){
+				desapilar(&p, &(*tope));
 		
-			if(p->id == idAux){
-				free(p);
-			}else{
-				apilar(&p, &tp2);
-			}											
-		}
+				if(p->id == idAux){
+					free(p);
+				}else{
+					apilar(&p, &tp2);
+				}											
+			}
 			
-		while(vacia(tp2) != 1){
-			desapilar(&p, &tp2);
-			apilar(&p, &(*tope));		
-		}
-	}						
+			while(vacia(tp2) != 1){
+				desapilar(&p, &tp2);
+				apilar(&p, &(*tope));		
+			}
+		}		
+	}							
 }
 
 
 void modificarClientes(struct clientes **tope){
-	int idAux=0;
 	
 	listarClientes(&(*tope));
 	fflush(stdin);
-	printf("Ingrese el ID del cliente que desea modificar\n");
-	scanf("%d",&idAux);
+	
+	int idAux = leerId(12);
 	fflush(stdin);
-	modificarNod(&(*tope),idAux);	
+	
+	if(idAux != 0){
+		modificarNod(&(*tope),idAux);	
+		
+	}	
 }
 
 
