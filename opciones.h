@@ -545,3 +545,17 @@ struct ranking *liberarRanking(struct ranking *ini){
 	return NULL;
 }
 
+void buscarNombre(struct opciones *Lop, int idx){
+	while(Lop!=NULL){
+		if(Lop->id == idx){
+			printf("\nOpcion: %s", Lop->nombre);		
+		}	
+		
+		Lop = Lop->sgte;
+	}
+}
+
+
+
+
+

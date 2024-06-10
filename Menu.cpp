@@ -21,7 +21,7 @@
 void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales **Lmat, struct stock *Rstc);
 void menuStockMateriales(struct stock **Rstc);
 void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop, struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope);
-void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop);
+void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc);
 void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec);
 void menuClientes(struct clientes **TPclt);
 
@@ -292,7 +292,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 			case '5':
 				system("cls");
 				//Listar Trabajos
-				subMenuTrabajos(&(*Ltrab),Lop);
+				subMenuTrabajos(&(*Ltrab),Lop, Lmat, Rstc);
 			break;
 			
 			default:
@@ -305,7 +305,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 	}
 }
 
-void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop){
+void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc){
 	
 	char op;
 	int band = 1;
@@ -351,6 +351,7 @@ void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop){
 			case '3':
 				system("cls");
 				//Trabajos vendidos entre dos fechas
+				buscarEntrefechas(*Ltrab, Lop, Lmat, Rstc);
 			break;
 			
 			

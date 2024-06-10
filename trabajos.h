@@ -16,6 +16,11 @@ void listarTrabajosFinalizados(struct trabajos *L);
 void bajaTrabajos(struct trabajos **L, struct stock **R);
 void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos **s);
 void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont);
+void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc);
+void recorrer(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc, struct fech fechaInicio, struct fech fechaFinx);
+int compararFechas(struct fech fechaInicio, struct fech fechaFinx);
+int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFinx);
+
 
 void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock, struct opciones *r, struct tecnicos **e, struct tecnicos **s, struct clientes **tope ){
     FILE *archivoTrabajos;
@@ -397,3 +402,115 @@ void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont){
 		L=L->sgte;	
 	}
 }
+
+
+
+
+void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc){
+
+	int band=0;
+	struct fech fechaInicio, fechaFinx;
+	char  opcion;
+
+	do{
+		printf("\nIngrese la fecha de inicio con numeros.");
+		printf("\nDia:");
+		scanf("%d", &fechaInicio.dia);
+		printf("Mes:");
+		scanf("%d", &fechaInicio.mes);
+		printf("A%co:", 164);
+		scanf("%d", &fechaInicio.anio);
+		printf("\nIngrese la fecha de final con numeros.");
+		printf("\nDia:");
+		scanf("%d", &fechaFinx.dia);
+		printf("Mes:");
+		scanf("%d", &fechaFinx.mes);
+		printf("A%co:", 164);
+		scanf("%d", &fechaFinx.anio);
+		
+		fflush(stdin);
+		
+		printf("\nFecha de Inicio: %d/%d/%d",fechaInicio.dia,fechaInicio.mes,fechaInicio.anio);
+		printf("\nFecha de Fin: %d/%d/%d",fechaFinx.dia,fechaFinx.mes,fechaFinx.anio);
+		printf("\n----------------------");
+		printf("\nEsto es correcto? s/n");
+		printf("\n----------------------\n");
+		scanf("%c", &opcion);
+		fflush(stdin);
+		
+		if(opcion == 's'){
+			band= 1;
+		}
+	}while(band==0);
+	
+	if((compararFechas(fechaInicio,fechaFinx))>0){
+		puts("Las fechas no son validas.");
+	}else{
+		recorrer(L, Lop, Lmat, Rstc, fechaInicio, fechaFinx);
+	}
+}
+
+
+
+void recorrer(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc, struct fech fechaInicio, struct fech fechaFinx){
+	
+	float precioMat=0, precioManoObra=0, totTrabajo=0, total=0;
+	
+	while(L!=NULL){
+		if(fechaEstaEntre(L->fechaFin,fechaInicio,fechaFinx)){
+			
+			precioMat = precioMateriales(L->idOpcion, Lmat, Rstc);
+			precioManoObra = obtenerCostoBase(L->idOpcion, Lop);
+	
+			if(L->altura > 4){	
+				precioManoObra = precioManoObra * 1.20;		
+			}	
+			
+			totTrabajo = precioManoObra + precioMat;
+			total = total + totTrabajo;
+	
+			printf("\n\nTrabajo numero: %d", L->id);
+			buscarNombre(Lop, L->idOpcion);
+			
+			printf("\nImporte total de materiales es de: $%.2f", precioMat);
+			printf("\nImporte total de mano de obra es de: $%.2f", precioManoObra);
+			printf("\nEl importe total del trabajo es de: $%.2f", totTrabajo);
+							
+		}
+		
+		L = L->sgte;
+	}
+	
+	printf("\n\nEl importe total de todos los trabajos listados es de: $%.2f", total);
+	
+}
+
+
+int compararFechas(struct fech fechaInicio, struct fech fechaFin){
+    if (fechaInicio.anio < fechaFin.anio) {
+        return -1;
+    } else if (fechaInicio.anio > fechaFin.anio) {
+        return 1;
+    } else {
+        if (fechaInicio.mes < fechaFin.mes) {
+            return -1;
+        } else if (fechaInicio.mes > fechaFin.mes) {
+            return 1;
+        } else {
+            if (fechaInicio.dia < fechaFin.dia) {
+                return -1;
+            } else if (fechaInicio.dia > fechaFin.dia) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
+
+
+int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFin){
+    return (compararFechas(fechaBuscar, fechaInicio) >= 0 && compararFechas(fechaBuscar, fechaFin) <= 0);
+}
+
+
