@@ -2,8 +2,6 @@
 #include<stdlib.h>
 #include<string.h>
 
-
-
 //OPCIONES
 void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc, struct materiales **Lmat);
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase);
@@ -20,7 +18,10 @@ void opcionesMasVendidas(struct opciones *L, struct trabajos *Ltrab,struct ranki
 struct ranking *insertarRanking(struct ranking *n, struct ranking *r);
 void mostrarRanking(struct ranking *r);
 struct ranking *liberarRanking(struct ranking *ini);
-void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont);
+void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont,struct fech fechaInicio,struct fech fechaFin);
+
+int compararFechas(struct fech fechaInicio, struct fech fechaFin);
+int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFin);
 
 struct opciones* nuevoNodo(int id, char* nombre, float costoBase) {
 	
@@ -473,8 +474,8 @@ float obtenerCostoBase(int idOpcion,struct opciones *r){
 }
 
 void crearPunteroRanking(struct trabajos *Ltrab, struct opciones *L){
-	
-	struct ranking *Lranking = (struct ranking*) malloc (sizeof(struct ranking));
+	struct ranking *Lranking=NULL;
+	Lranking = (struct ranking*) malloc (sizeof(struct ranking));
 		if(Lranking!=NULL){
 			Lranking->sgte=NULL;
 			opcionesMasVendidas(L,Ltrab,Lranking);
@@ -485,31 +486,75 @@ void crearPunteroRanking(struct trabajos *Ltrab, struct opciones *L){
 }
 
 void opcionesMasVendidas(struct opciones *L, struct trabajos *Ltrab,struct ranking *Lranking){
-	int cont=0;
-	while(L!=NULL){
-		obtenerCantidadDeVentas(Ltrab,L->id,&cont);
-			if(cont!=0){
-				struct ranking *n = (struct ranking*) malloc (sizeof(struct ranking));
-					if(n!=NULL){
-						n->sgte=NULL;
-						n->idOp=L->id;
-						strcpy(n->nombre,L->nombre);
-						n->ventas=cont;
-						Lranking=insertarRanking(n,Lranking);
-					}else{
-						printf("\nNo hay suficiente memoria para mostrar las opciones mas vendidas");
+	int cont=0,band=0;
+	char opcion;
+	struct fech fechaInicio;
+	struct fech fechaFin;
+	do{
+		printf("\nIngrese la fecha de inicio con numeros.");
+		printf("\nDia:");
+		scanf("%d", &fechaInicio.dia);
+		printf("Mes:");
+		scanf("%d", &fechaInicio.mes);
+		printf("A%co:", 164);
+		scanf("%d", &fechaInicio.anio);
+		printf("\nIngrese la fecha de final con numeros.");
+		printf("\nDia:");
+		scanf("%d", &fechaFin.dia);
+		printf("Mes:");
+		scanf("%d", &fechaFin.mes);
+		printf("A%co:", 164);
+		scanf("%d", &fechaFin.anio);
+		
+		fflush(stdin);
+		
+		printf("\nFecha de Inicio: %d/%d/%d",fechaInicio.dia,fechaInicio.mes,fechaInicio.anio);
+		printf("\nFecha de Fin: %d/%d/%d",fechaFin.dia,fechaFin.mes,fechaFin.anio);
+		printf("\n----------------------");
+		printf("\nEsto es correcto? s/n");
+		printf("\n----------------------\n");
+		scanf("%c", &opcion);
+		fflush(stdin);
+		
+		if(opcion == 's'){
+			band= 1;
+		}
+	}while(band==0);
+	
+	if((compararFechas(fechaInicio,fechaFin))>0){
+		puts("Las fechas no son validas.");
+	}else{    
+			while(L!=NULL){
+				obtenerCantidadDeVentas(Ltrab,L->id,&cont,fechaInicio,fechaFin); 
+					if(cont!=0){
+						struct ranking *n = NULL;
+						n = (struct ranking*) malloc (sizeof(struct ranking));
+							if(n!=NULL){
+								n->idOp=L->id;
+								strcpy(n->nombre,L->nombre);
+								n->ventas=cont;
+								n->sgte=NULL;
+								Lranking=insertarRanking(n,Lranking);
+							}else{
+								printf("\nNo hay suficiente memoria para mostrar las opciones mas vendidas");
+							}
+							
 					}
+				L=L->sgte;
+				cont=0;	
 			}
-		cont=0;
-		L=L->sgte;
+				
 	}
+		
+	
+	
 		mostrarRanking(Lranking);
 		Lranking=liberarRanking(Lranking);
 }
 
 struct ranking *insertarRanking(struct ranking *n, struct ranking *r){
 	if(r!=NULL){
-		if((n->ventas)<(r->ventas)){
+		if((n->ventas)>(r->ventas)){
 			n->sgte=r;
 			r=n;
 		}else{
@@ -522,13 +567,15 @@ struct ranking *insertarRanking(struct ranking *n, struct ranking *r){
 }
 
 void mostrarRanking(struct ranking *r){
-	int cont=4;
+	int cont=1;
 	
-	while((r!=NULL)&&(cont!=0)){
-		printf("\nTOP %d------------------\n",cont);
-		printf("\nNombre de la opcion: %s",r->nombre);
-		printf("\nCantidad de ventas: %d\n",r->ventas);
-		cont--;
+	while((r!=NULL)&&(cont!=5)){
+		if(r->ventas!=0){
+			printf("\nTOP %d------------------\n",cont);
+			printf("\nNombre de la opcion: %s",r->nombre);
+			printf("\nCantidad de ventas: %d\n",r->ventas);	
+		}
+		cont++;
 		r=r->sgte;
 	}
 	
@@ -545,6 +592,7 @@ struct ranking *liberarRanking(struct ranking *ini){
 	return NULL;
 }
 
+
 void buscarNombre(struct opciones *Lop, int idx){
 	while(Lop!=NULL){
 		if(Lop->id == idx){
@@ -556,6 +604,30 @@ void buscarNombre(struct opciones *Lop, int idx){
 }
 
 
+int compararFechas(struct fech fechaInicio, struct fech fechaFin) {
+    if (fechaInicio.anio < fechaFin.anio) {
+        return -1;
+    } else if (fechaInicio.anio > fechaFin.anio) {
+        return 1;
+    } else {
+        if (fechaInicio.mes < fechaFin.mes) {
+            return -1;
+        } else if (fechaInicio.mes > fechaFin.mes) {
+            return 1;
+        } else {
+            if (fechaInicio.dia < fechaFin.dia) {
+                return -1;
+            } else if (fechaInicio.dia > fechaFin.dia) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
 
+int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFin) {
+    return (compararFechas(fechaBuscar, fechaInicio) >= 0 && compararFechas(fechaBuscar, fechaFin) <= 0);
+}
 
 

@@ -18,8 +18,11 @@ void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos 
 void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont);
 void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc);
 void recorrer(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc, struct fech fechaInicio, struct fech fechaFinx);
-int compararFechas(struct fech fechaInicio, struct fech fechaFinx);
-int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFinx);
+int compararFechas2(struct fech fechaInicio, struct fech fechaFinx);
+int fechaEstaEntre2(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFinx);
+
+
+void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont,struct fech fechaInicio,struct fech fechaFin);
 
 
 void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *rMat, struct stock *rStock, struct opciones *r, struct tecnicos **e, struct tecnicos **s, struct clientes **tope ){
@@ -56,8 +59,10 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 	        }
 	        
 	        printf("Ingrese ubicacion: ");
-	        scanf("%s", temp.ubicacion);
-	        
+	        fflush(stdin);
+	        gets(temp.ubicacion);
+			fflush(stdin);
+
 			//CLIENTE
 			system("cls");
 			puts("CLIENTES----------------------------------\n");
@@ -160,18 +165,8 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 	        	temp.costoTotal=materiales+costoBase;
 	        }
 	        
-	        //system("cls");
-	        printf("El trabajo esta finalizado? (1 para si, 0 para no): ");
-	        scanf("%d", &temp.finalizado);
-	        	if(temp.finalizado==1){
-	        		printf("Ingrese dia de finalizacion: ");
-			        scanf("%d", &temp.fechaFin.dia);
-			        printf("Ingrese mes de finalizacion: ");
-			        scanf("%d", &temp.fechaFin.mes);
-			        printf("Ingrese anio de finalizacion: ");
-			        scanf("%d", &temp.fechaFin.anio);
-	        	}
-	
+	        temp.finalizado=0;
+	        
 	        // Guardar en el archivo
 	        fwrite(&temp, sizeof(struct trabajos), 1, archivoTrabajos);
 	        
@@ -394,13 +389,15 @@ struct trabajos* insertarLES(struct trabajos *L,struct trabajos *nv){
 	return L;
 }
 
-void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont){
+void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont,struct fech fechaInicio,struct fech fechaFin){
 	while(L!=NULL){
-		if(L->idOpcion==id){
+		if(fechaEstaEntre(L->fechaFin,fechaInicio,fechaFin)){
+			if((L->idOpcion==id)&&(L->finalizado==1)){
 			(*cont)++;
+			}
 		}
 		L=L->sgte;	
-	}
+	}	
 }
 
 
@@ -486,7 +483,7 @@ void recorrer(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat,
 }
 
 
-int compararFechas(struct fech fechaInicio, struct fech fechaFin){
+int compararFechas2(struct fech fechaInicio, struct fech fechaFin){
     if (fechaInicio.anio < fechaFin.anio) {
         return -1;
     } else if (fechaInicio.anio > fechaFin.anio) {
@@ -509,7 +506,7 @@ int compararFechas(struct fech fechaInicio, struct fech fechaFin){
 }
 
 
-int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFin){
+int fechaEstaEntre2(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFin){
     return (compararFechas(fechaBuscar, fechaInicio) >= 0 && compararFechas(fechaBuscar, fechaFin) <= 0);
 }
 

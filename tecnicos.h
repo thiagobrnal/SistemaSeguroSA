@@ -40,8 +40,9 @@ void altaTecnicos(struct tecnicos **e, struct tecnicos **s){
 		temp.id = ultId + 1;
         temp.dni = dniAux;
         printf("Ingrese nombre: ");
-        scanf("%s", temp.nombre);
-
+        fflush(stdin);
+        gets(temp.nombre);
+		fflush(stdin);
         fwrite(&temp, sizeof(struct tecnicos), 1, archivoTecnicos);
         
         

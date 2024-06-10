@@ -37,10 +37,12 @@ void altaStock(struct stock **r){
         scanf("%d", &temp.stock);
         fflush(stdin);
         printf("Ingrese denominacion: ");
-        scanf("%s", temp.denominacion);
+        fflush(stdin);
+		gets(temp.denominacion);
         fflush(stdin);
         printf("Ingrese unidad: ");
-        scanf("%s", temp.unidad);
+        fflush(stdin);
+		gets(temp.unidad);
         fflush(stdin);
         printf("Ingrese precio: ");
         scanf("%f", &temp.precio);
@@ -110,11 +112,15 @@ void modificarNodo(struct stock *r,int dato){
 		                break;
 		            case 2:
 		                printf("Ingrese la nueva denominacion: ");
-		                scanf("%s", r->denominacion);
+		                fflush(stdin);
+		                gets(r->denominacion);
+		                fflush(stdin);
 		                break;
 		            case 3:
 		                printf("Ingrese la nueva unidad: ");
-		                scanf("%s", r->unidad);
+		                fflush(stdin);
+		                gets(r->unidad);
+		                fflush(stdin);
 		                break;
 		            case 4:
 		                printf("Ingrese el nuevo precio: ");
@@ -287,13 +293,15 @@ void mostrarStock(struct stock *r){
 	}else{
 		fread(&stock, sizeof(stock),1,arch1);
 		while(!feof(arch1)){
-    		printf("\n%d -",stock.id);
-    		printf(" Nombre: ");
-    		puts(stock.denominacion);
-    		printf(" unidad: ");
-    		puts(stock.unidad);
-    		printf(" Stock: %d",stock.stock);
-    		printf(" Precio: %f",stock.precio);
+			if(stock.estado==1){
+				printf("\n%d -",stock.id);
+	    		printf(" Nombre: ");
+	    		puts(stock.denominacion);
+	    		printf(" unidad: ");
+	    		puts(stock.unidad);
+	    		printf(" Stock: %d",stock.stock);
+	    		printf(" Precio: %f",stock.precio);
+			}
 			fread(&stock, sizeof(stock),1,arch1);
 		}
 		fclose(arch1);
@@ -322,8 +330,6 @@ void buscarCantidadStock(int idStock, int *cantidadStock){
 		}
 		fclose(stck);		
 	}
-	
-	
 	
 }
 
