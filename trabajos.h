@@ -49,9 +49,9 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 			
 			//OPCIONES
 			system("cls");
-			puts("OPCIONES----------------------------------\n");
+			printf("\tOPCIONES");
 			listarOpciones(Ltar,rMat,rStock);
-			printf("Seleccione el ID de la opcion que desea usar: ");
+			printf("\nSeleccione el ID de la opcion que desea usar: ");
 			scanf("%d",&temp.idOpcion);
 	        
 	        printf("Ingrese altura: ");
@@ -68,14 +68,14 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 
 			//CLIENTE
 			system("cls");
-			puts("CLIENTES----------------------------------\n");
+			printf("\tCLIENTES");
 			listarClientes(&(*tope));
 	        do {
-	        printf("\nMenu:\n");
+	        printf("\nMenu\n");
 	        printf("1. Usar un cliente de la lista\n");
 	        printf("2. Registrar un nuevo cliente\n");
 	        printf("3. Salir\n");
-	        printf("Ingrese una opción: ");
+	        printf("Ingrese una opcion: ");
 	        scanf("%d", &opcion);
 				switch (opcion){
 					case 1:
@@ -99,7 +99,8 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 							                   opcion=2;
 							                   break;
 							               default:
-							                   printf("Opción no válida. Intente de nuevo.\n");
+							                   printf("Opcion no valida. Intente de nuevo.\n");
+							                break;
 							             }
 							                            
 							            	if(opcion==1){
@@ -121,7 +122,7 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 				        printf("Saliendo del programa...\n");
 				        break;
 				    default:
-				        printf("Opción no válida. Intente de nuevo.\n");
+				        printf("Opcion no valida. Intente de nuevo.\n");
 				
 				}				
 			        
@@ -129,10 +130,10 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 			
 		//TECNICOS
 		system("cls");
-		puts("TECNICOS----------------------------------\n");
+		puts("\tTECNICOS");
 	    encontro=0;
 	    listarTecnicos(&(*e),&(*s));
-		printf("Ingrese DNI del Tecnico: ");
+		printf("\nIngrese DNI del Tecnico: ");
 		scanf("%ld",&dniTecnico);
 		buscarDniTecnico(&encontro,dniTecnico,&temp.idTecnico);
 			do {
@@ -227,7 +228,7 @@ void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos 
 	FILE *trab;
 	
 	listarTrabajosNoFinalizados(*L);
-	printf("\nIngrese el ID del trabajo que desea dar por modificar");
+	printf("\nIngrese el ID del trabajo que desea dar por modificar: ");
 	scanf("%d",&idAux);
 	struct trabajos *R=*L;
 	
@@ -235,12 +236,12 @@ void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos 
 	    if (R->id == idAux) {
 	    		int opcion=0;
 			        do {
-						printf("\n¿Qué desea modificar?\n");
+						printf("\n¿Que desea modificar?\n");
 						printf("1. Altura\n");
 						printf("2. Ubicacion\n");
 						printf("3. Asignar a otro tecnico\n");
 						printf("4. Salir\n");
-						printf("Seleccione una opción: ");
+						printf("Seleccione una opcion: ");
 						scanf("%d", &opcion);
 										
 							switch (opcion) {
@@ -253,21 +254,21 @@ void modificarTrabajos(struct trabajos **L,struct tecnicos **e, struct tecnicos 
 									scanf("%s", R->ubicacion);
 									break;
 								case 3:
-									puts("TECNICOS----------------------------------\n");
+									printf("\n\tTECNICOS");
 									    long dniTecnico;
 									    listarTecnicos(&(*e),&(*s));
-										printf("Ingrese DNI del Tecnico: ");
+										printf("\nIngrese DNI del Tecnico: ");
 										scanf("%ld",&dniTecnico);
 										buscarDniTecnico(&encontro,dniTecnico,&R->idTecnico);
 										if(encontro==0){
-											puts("DNI incorrecto, ingrese nuevamente\n");
+											puts("DNI incorrecto, ingrese nuevamente");
 										}
 									break;
 								case 4:
-									printf("Saliendo del menú de modificación.\n");
+									printf("Saliendo del menu de modificacion.\n");
 									break;
 								default:
-									printf("Opción no válida.\n");
+									printf("Opcion no valida.\n");
 									break;
 							}
 					} while (opcion != 4);
@@ -377,19 +378,17 @@ void bajaTrabajos(struct trabajos **L, struct stock **R){
 void listarTrabajosFinalizados(struct trabajos *L){
 	if(L!=NULL){
 		if(L->finalizado==1){
-			puts("\n");
 			printf("\nID trabajo: %d",L->id);
 			printf("\nID cliente: %d",L->idCliente);
 			printf("\nID opcion: %d",L->idOpcion);
 			printf("\nID tecnico %d",L->idTecnico);
 			printf("\nUbicacion: %s",L->ubicacion);
 			fflush(stdin);
-			printf("\nAltura del trabajo: %d",L->altura);
-			printf("\nCosto total del trabajo: %f",L->costoTotal);
-			printf("\nFECHA:");
-			printf("\nDIA : %d",L->fechaFin.dia);
-			printf("\nMES : %d",L->fechaFin.mes);
-			printf("\nAÑO : %d",L->fechaFin.anio);
+			printf("\nAltura del trabajo: %d mts",L->altura);
+			printf("\nCosto total del trabajo: $%.2f",L->costoTotal);
+			printf("\n\tFECHA: ");
+			printf("%d/%d/%d",L->fechaFin.dia,L->fechaFin.mes,L->fechaFin.anio);
+			printf("\n------------------------------------------------");
 		}
 		listarTrabajosFinalizados(L->sgte);
 	}
@@ -399,15 +398,14 @@ void listarTrabajosFinalizados(struct trabajos *L){
 void listarTrabajosNoFinalizados(struct trabajos *L ){
 	if(L!=NULL){
 		if(L->finalizado==0){
-			puts("\n");
 			printf("\nID trabajo: %d",L->id);
 			printf("\nID cliente: %d",L->idCliente);
 			printf("\nID opcion: %d",L->idOpcion);
 			printf("\nID tecnico %d",L->idTecnico);
 			printf("\nUbicacion: %s",L->ubicacion);
-			fflush(stdin);
-			printf("\nAltura del trabajo: %d",L->altura);
-			printf("\nCosto total del trabajo: %f",L->costoTotal);
+			printf("\nAltura del trabajo: %d mts",L->altura);
+			printf("\nCosto total del trabajo: $%.2f",L->costoTotal);
+			printf("\n------------------------------------------------");
 		}
 		listarTrabajosNoFinalizados(L->sgte);
 	}
@@ -503,12 +501,12 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 		printf("\nFecha de Inicio: %d/%d/%d",fechaInicio.dia,fechaInicio.mes,fechaInicio.anio);
 		printf("\nFecha de Fin: %d/%d/%d",fechaFinx.dia,fechaFinx.mes,fechaFinx.anio);
 		printf("\n----------------------");
-		printf("\nEsto es correcto? s/n");
+		printf("\nEsto es correcto? y/n");
 		printf("\n----------------------\n");
 		scanf("%c", &opcion);
 		fflush(stdin);
 		
-		if(opcion == 's'){
+		if(opcion == 'y'){
 			band= 1;
 		}
 	}while(band==0);
