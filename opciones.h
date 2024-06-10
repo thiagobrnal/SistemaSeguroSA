@@ -67,9 +67,15 @@ void altaOpciones(struct opciones **ini, struct tareas **Ltar,struct stock *Rstc
     	gets(opciones.nombre);
     	fflush(stdin);
    		
-		printf("Ingrese el costo de esta operacion (sin mano de obra ni materiales): ");
-    	scanf("%f", &opciones.costoBase);
-    	fflush(stdin);
+   		do{
+   			printf("Ingrese el costo de esta operacion (sin mano de obra ni materiales): ");
+    		scanf("%f", &opciones.costoBase);
+    		fflush(stdin);
+    		if(opciones.costoBase < 0.1){
+    			printf("intente de nuevo con un numero valido mayor a 0.\n");
+			}
+		}while(opciones.costoBase < 0.1);
+		
     	
     	
     	fwrite(&opciones, sizeof(opciones), 1, arch1);
@@ -248,9 +254,14 @@ void modificarOpcion(struct opciones *ini, struct tareas **Ltar, struct material
                 				fflush(stdin);
                 				break;
             				case '2':
-                				printf("Ingrese el nuevo costo base de la opcion: ");
-                				scanf("%f", &actual->costoBase);
-                				fflush(stdin);
+            					do{
+   									printf("Ingrese el nuevo costo base de la opcion: ");
+                					scanf("%f", &actual->costoBase);
+                					fflush(stdin);
+    								if(actual->costoBase < 0.1){
+    									printf("intente de nuevo con un numero valido mayor a 0.\n");
+									}
+								}while(actual->costoBase < 0.1);
                 				break;
             				default:
                 				printf("Opcion no válida.\n");
@@ -311,7 +322,7 @@ void modificarOpcion(struct opciones *ini, struct tareas **Ltar, struct material
                 				altaTarea(&(*Ltar),idOp);
                 			break;
             				default:
-                				printf("Opcion no válida.\n");
+                				printf("Opcion no valida.\n");
                 			break;
                 		}
                 	}
@@ -338,7 +349,7 @@ void modificarOpcion(struct opciones *ini, struct tareas **Ltar, struct material
                 				matBand = 0;
                 			break;
                 			case '1':
-                				modificarMaterial(*rMat,idOp);
+                				modificarMaterial(*rMat,idOp,rStock);
                 				break;
             				case '2':
                 				bajaMaterial(idOp,&(*rMat));
@@ -354,7 +365,7 @@ void modificarOpcion(struct opciones *ini, struct tareas **Ltar, struct material
             break;
         	}
             default:
-                printf("Opcion no válida.\n");
+                printf("Opcion no valida.\n");
                 break;
         }
 	}
@@ -629,5 +640,6 @@ int compararFechas(struct fech fechaInicio, struct fech fechaFin) {
 int fechaEstaEntre(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFin) {
     return (compararFechas(fechaBuscar, fechaInicio) >= 0 && compararFechas(fechaBuscar, fechaFin) <= 0);
 }
+
 
 

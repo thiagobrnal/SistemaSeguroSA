@@ -55,17 +55,35 @@ void altaTarea(struct tareas **ini, int idOpcion) {
 	fflush(stdin);
 	
     // Leer datos
-    printf("Ingrese el orden de la tarea: ");
-    scanf("%d", &tareas.orden);
-    fflush(stdin);
+    do{
+    	printf("Ingrese el orden de la tarea: ");
+    	scanf("%d", &tareas.orden);
+    	fflush(stdin);
+        if(tareas.orden < 0){
+            printf("intente de nuevo con un numero valido mayor a 0.\n");
+		}
+	}while(tareas.orden < 0);
+    
 
-    printf("Ingrese la hora de duracion: ");
-    scanf("%d", &tareas.duracion.hora);
-    fflush(stdin);
+    do{
+    	printf("Ingrese la hora de duracion: ");
+    	scanf("%d", &tareas.duracion.hora);
+    	fflush(stdin);
+    	if(tareas.duracion.hora < 0){
+    		printf("intente de nuevo con un numero valido mayor a 0.\n");
+		}
+	}while(tareas.duracion.hora < 0);
 
-    printf("Ingrese los minutos de duracion: ");
-    scanf("%d", &tareas.duracion.minuto);
-    fflush(stdin);
+    do {
+        printf("Ingrese los minutos de duracion (0-59): ");
+        scanf("%d", &tareas.duracion.minuto);
+        fflush(stdin);
+
+        if (tareas.duracion.minuto < 0 || tareas.duracion.minuto > 59) {
+            printf("Los minutos deben estar entre 0 y 59. Intente de nuevo.\n");
+        }
+    } while (tareas.duracion.minuto < 0 || tareas.duracion.minuto > 59);
+    
 	tareas.estado = 1;
     
     fwrite(&tareas, sizeof(tareas), 1, arch1);
@@ -184,9 +202,9 @@ void modificarTarea(struct tareas *ini, int idOp) {
 		
     	printf("¿Qué desea modificar?\n");
     	printf("1. Orden de la tarea\n");
-    	printf("2. Duración de la tarea\n");
+    	printf("2. Duracion de la tarea\n");
     	printf("0. Salir\n");
-    	printf("Seleccione una opción: ");
+    	printf("Seleccione una opcion: ");
     	scanf("%c", &opcion);
     	fflush(stdin);
 
@@ -195,20 +213,37 @@ void modificarTarea(struct tareas *ini, int idOp) {
     			printf("Saliendo del menu de modificacion.\n");
     			bandM=0;
     			break;
-        	case '1':
-            	printf("Ingrese el nuevo orden de la tarea: ");
-            	scanf("%d", &actual->orden);
-            	fflush(stdin);
+        	case '1':{
+        		do{
+        			printf("Ingrese el nuevo orden de la tarea: ");
+            		scanf("%d", &actual->orden);
+            		fflush(stdin);
+            		if(actual->orden < 0){
+            			printf("intente de nuevo con un numero valido mayor a 0.\n");
+					}
+				}while(actual->orden < 0);
            		break;
-        	case '2':
-            	printf("Ingrese la nueva hora de duracion: ");
-            	scanf("%d", &actual->duracion.hora);
-            	fflush(stdin);
-            	printf("Ingrese los nuevos minutos de duración: ");
-            	scanf("%d", &actual->duracion.minuto);
-            	fflush(stdin);
+           }
+        	case '2':{ 
+            	do{
+    				printf("Ingrese la hora de duracion: ");
+    				scanf("%d", &actual->duracion.hora);
+    				fflush(stdin);
+    				if(tareas.duracion.hora < 0){
+    					printf("intente de nuevo con un numero valido mayor a 0.\n");
+					}
+				}while(actual->duracion.hora < 0);
+            	do {
+        			printf("Ingrese los minutos de duracion (0-59): ");
+        			scanf("%d", &actual->duracion.minuto);
+        			fflush(stdin);
+
+       			 	if (actual->duracion.minuto < 0 || actual->duracion.minuto > 59) {
+            		printf("Los minutos deben estar entre 0 y 59. Intente de nuevo.\n");
+        			}
+    			} while (actual->duracion.minuto < 0 || actual->duracion.minuto > 59);
             	break;
-            
+        	}
         	default:
             	printf("Opcion no valida.\n");
             	break;

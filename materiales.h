@@ -10,7 +10,7 @@ void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc);
 void recorrerMateriales(struct materiales *rc);
 void listarMateriales();
 float precioMateriales(int idOpcion, struct materiales *rMat, struct stock *rStock);
-void modificarMaterial(struct materiales *ini,int idOp);
+void modificarMaterial(struct materiales *ini, int idOp, struct stock *r);
 void bajaMaterial(int idOpcion, struct materiales **ini);
 void buscarMaterialesPorId(int idOpcion,struct materiales *rc);
 void buscarCantidadMateriales(int idOpcion, int *idStock, int *cantidadMateriales);
@@ -40,18 +40,29 @@ void altaMateriales(struct materiales **ini,int idOpcion, struct stock *Rstc) {
         printf("\nError al abrir el archivo materiales.dat");
     } else {
         // Obtener idOpcion e idStock
-        
         materiales.idOpcion = idOpcion;
         listarStock(Rstc);
-        printf("\nIngrese el ID del material que quiere agregar:");
-        scanf("%d",&idStock);
+        int idRef = -1;
+        do{
+        	printf("\nIngrese el ID del material que quiere agregar:");
+        	scanf("%d",&idStock);
+        	buscarIdStock(idStock,Rstc,&idRef);
+        	if(idRef < 1){
+        		printf("ID no valida:");
+			}
+		}while(idRef < 1);
         
         materiales.idStock = idStock;
 		fflush(stdin);
 		
-        printf("Ingrese la cantidad del material: ");
-        scanf("%d", &materiales.cantidad);
-        fflush(stdin);
+        do{
+        	printf("Ingrese la cantidad del material: ");
+        	scanf("%d", &materiales.cantidad);
+        	fflush(stdin);
+        	if(materiales.cantidad < 0){
+        		printf("intente de nuevo con un numero valido mayor a 0.\n");
+			}
+		}while(materiales.cantidad < 0);
 
 		materiales.estado=1;
 
@@ -144,7 +155,7 @@ void bajaMaterial(int idOp, struct materiales **ini) {
 
 }
 
-void modificarMaterial(struct materiales *ini,int idOp) {
+void modificarMaterial(struct materiales *ini, int idOp, struct stock *Rstc) {
     if (ini == NULL) {
         printf("La lista de materiales está vacía.\n");
         return;
@@ -152,12 +163,19 @@ void modificarMaterial(struct materiales *ini,int idOp) {
     recorrerMateriales(ini);
 
     int idMat;
-    printf("\nIngrese el ID de stock para modificar: ");
-    scanf("%d", &idMat);
-    fflush(stdin);
-    if(idMat == 0){
-    	return;
-	}
+	int idRef = -1;
+        do{
+        	printf("\nIngrese el ID de stock para modificar: ");
+    		scanf("%d", &idMat);
+    		fflush(stdin);
+    		if(idMat == 0){
+    			return;
+			}
+        	buscarIdStock(idMat,Rstc,&idRef);
+        	if(idRef < 1){
+        		printf("ID no valida:");
+			}
+		}while(idRef < 1);
 
     struct materiales *actual = ini;
     while ((actual != NULL) && (actual->idStock != idMat || actual->idOpcion != idOp)) {
@@ -185,9 +203,14 @@ void modificarMaterial(struct materiales *ini,int idOp) {
                 bandM = 0;
                 break;
             case '1':
-                printf("Ingrese la nueva cantidad del material: ");
-                scanf("%d", &actual->cantidad);
-                fflush(stdin);
+                do{
+        			printf("Ingrese la nueva cantidad del material: ");
+                	scanf("%d", &actual->cantidad);
+                	fflush(stdin);
+                	if(actual->cantidad < 0){
+                		printf("intente de nuevo con un numero valido mayor a 0.\n");
+					}
+				}while(actual->cantidad < 0);
                 break;
             default:
                 printf("Opción no válida.\n");

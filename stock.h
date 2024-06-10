@@ -16,6 +16,7 @@ void modificarStock(struct stock **r);
 void buscarCantidadStock(int idStock, int *cantidadStock);
 void descontarStock(int idStock, int cantidadMateriales);
 void editarArbolStock(struct stock *r, int idStock, int cantidad);
+int buscarIdStock(int idBusc, struct stock *r, int *idRef);
 
 void altaStock(struct stock **r){
     FILE *archivoStock;
@@ -371,4 +372,15 @@ void editarArbolStock(struct stock *r, int idStock, int cantidad){
     }
 	
 	
+}
+
+int buscarIdStock(int idBusc, struct stock *r, int *idRef){
+
+	if (r != NULL) {
+        buscarIdStock(idBusc,r->izq,idRef);
+        if(r->id==idBusc){
+        	*idRef = r->id;	
+        }
+        buscarIdStock(idBusc,r->der,idRef);
+    }
 }
