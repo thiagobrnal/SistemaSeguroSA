@@ -35,6 +35,8 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 	float materiales=0 , costoBase=0;
 	int opcion=0,opcion2=0;
 	int band3=0;
+	FILE *aText;
+    char nombreArchivo[50];
 	
     if((archivoTrabajos = fopen("trabajos.dat", "a+b")) != NULL){
 	        // LEER DATOS
@@ -171,6 +173,25 @@ void altaTrabajos(struct trabajos **L, struct tareas *Ltar, struct materiales *r
 	        
 	        // Guardar en el archivo
 	        fwrite(&temp, sizeof(struct trabajos), 1, archivoTrabajos);
+	    
+    		sprintf(nombreArchivo, "%d_trabajo.txt", temp.id);
+
+		    if ((aText = fopen(nombreArchivo, "w")) != NULL) {
+		        fprintf(aText, "ID de Trabajo: %d\n", temp.id);
+		        fprintf(aText, "ID de la opcion a instalar: %d\n", temp.idOpcion); 
+		        fprintf(aText, "ID del cliente: %d\n", temp.idCliente); 
+		        fprintf(aText, "Ubicacion: %s\n", temp.ubicacion);
+		        if(band==1){
+		        	fprintf(aText, "Requiere instalación a más de 4 metros: Si - Altura: %d\n",temp.altura);
+		        }else{
+		        	fprintf(aText, "Requiere instalación a más de 4 metros: No - Altura: %d\n",temp.altura);
+		        }
+		        fprintf(aText, "Costo Total: %.2f\n", temp.costoTotal);
+		        fclose(aText);
+		    } else {
+		        puts("Error al crear el archivo de trabajo");
+		    }
+
 	        
 	        // CREAR NODO E INSERTARLO
 	        n = (struct trabajos*)malloc(sizeof(struct trabajos));
