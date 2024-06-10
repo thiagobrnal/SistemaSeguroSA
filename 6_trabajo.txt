@@ -1,0 +1,6 @@
+ID de Trabajo: 6
+ID de la opcion a instalar: 1
+ID del cliente: 1
+Ubicacion: Santa Catalina
+Requiere instalación a más de 4 metros: No - Altura: 4
+Costo Total: 241.50

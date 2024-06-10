@@ -1,0 +1,6 @@
+ID de Trabajo: 10
+ID de la opcion a instalar: 5
+ID del cliente: 4
+Ubicacion: Los girasoles
+Requiere instalación a más de 4 metros: No - Altura: 3
+Costo Total: 308.00

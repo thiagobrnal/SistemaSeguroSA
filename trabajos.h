@@ -310,7 +310,7 @@ void bajaTrabajos(struct trabajos **L, struct stock **R){
 	int cantidadMateriales=0 , idStock=0 ,cantidadStock=0 , total=0;
 	
 	listarTrabajosNoFinalizados(*L);
-	printf("\nIngrese el ID del trabajo que desea dar por finalizado");
+	printf("\nIngrese el ID del trabajo que desea dar por finalizado: ");
 	scanf("%d",&idAux);
 	
 	if((trab = fopen("trabajos.dat", "r+b")) != NULL){
@@ -451,7 +451,7 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 	do{
 		 printf("\nIngrese la fecha de inicio con numeros.");
 		    do {
-		        printf("\nDia:");
+		        printf("\nDia: ");
 		        scanf("%d", &fechaInicio.dia);
 		        if ((fechaInicio.dia > 31) || (fechaInicio.dia < 1)) {
 		            printf("Los dias deben estar entre 1 y 31. Intente de nuevo.\n");
@@ -459,7 +459,7 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 		    } while ((fechaInicio.dia > 31) || (fechaInicio.dia < 1));
 		
 		    do {
-		        printf("\nMes:");
+		        printf("Mes: ");
 		        scanf("%d", &fechaInicio.mes);
 		        if ((fechaInicio.mes < 1) || (fechaInicio.mes > 12)) {
 		            printf("Los meses deben estar entre 1 y 12. Intente de nuevo.\n");
@@ -467,7 +467,7 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 		    } while ((fechaInicio.mes < 1) || (fechaInicio.mes > 12));
 		
 		    do {
-		        printf("\nAño:");
+		        printf("A%co: ",164);
 		        scanf("%d", &fechaInicio.anio);
 		        if ((fechaInicio.anio < 2000) || (fechaInicio.anio > 3000)) {
 		            printf("Ingrese un año coherente. Intente de nuevo.\n");
@@ -476,7 +476,7 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 		
 		printf("\nIngrese la fecha de final con numeros.");
 		    do {
-		        printf("\nDia:");
+		        printf("\nDia: ");
 		        scanf("%d", &fechaFinx.dia);
 		        if ((fechaFinx.dia > 31) || (fechaFinx.dia < 1)) {
 		            printf("Los dias deben estar entre 1 y 31. Intente de nuevo.\n");
@@ -484,7 +484,7 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 		    } while ((fechaFinx.dia > 31) || (fechaFinx.dia < 1));
 		
 		    do {
-		        printf("\nMes:");
+		        printf("Mes: ");
 		        scanf("%d", &fechaFinx.mes);
 		        if ((fechaFinx.mes < 1) || (fechaFinx.mes > 12)) {
 		            printf("Los meses deben estar entre 1 y 12. Intente de nuevo.\n");
@@ -492,7 +492,7 @@ void buscarEntrefechas(struct trabajos *L, struct opciones *Lop, struct material
 		    } while ((fechaFinx.mes < 1) || (fechaFinx.mes > 12));
 		
 		    do {
-		        printf("\nAño:");
+		        printf("A%co: ",164);
 		        scanf("%d", &fechaFinx.anio);
 		        if ((fechaFinx.anio < 2000) || (fechaFinx.anio > 3000)) {
 		            printf("Ingrese un año coherente. Intente de nuevo.\n");
