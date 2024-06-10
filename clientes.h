@@ -13,6 +13,7 @@ void bajaclientes(struct clientes **tope);
 void modificarClientes(struct clientes **tope);
 void modificarNod(struct clientes **top, int idx);
 void buscarDniCliente(int *encontro, long dniCliente,int *id);
+void buscarNombreCliente(struct clientes **tp,int id);
 
 void altaClientes(struct clientes **tp){
 	FILE *archC=NULL;
@@ -284,6 +285,25 @@ void buscarDniCliente(int *encontro, long dniCliente,int *id){
 			}
 			fclose(clt);				
 		}
+		
+}
+
+void buscarNombreCliente(struct clientes **tope,int id){
+	struct clientes *p=NULL, *tp2=NULL;
+	
+	while(vacia((*tope)) != 1){
+		desapilar(&p, &(*tope));
+		
+		if(p->id==id){
+			printf("\nNombre del Cliente: %s",p->nombre);				
+		}
+		apilar(&p, &tp2);				
+	}
+	
+	while(vacia(tp2) != 1){
+		desapilar(&p, &tp2);
+		apilar(&p, &(*tope));		
+	}
 		
 }
 

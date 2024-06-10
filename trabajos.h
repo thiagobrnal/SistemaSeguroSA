@@ -21,6 +21,9 @@ void recorrer(struct trabajos *L, struct opciones *Lop, struct materiales *Lmat,
 int compararFechas2(struct fech fechaInicio, struct fech fechaFinx);
 int fechaEstaEntre2(struct fech fechaBuscar, struct fech fechaInicio, struct fech fechaFinx);
 
+void trabajosAsignadosTecnico(struct tecnicos **e, struct tecnicos **s, struct trabajos *L,struct opciones *Lop,struct clientes **tope);
+void listarTrabajosDelTecnico(int idTecnico, struct trabajos *r,struct opciones *Lop,struct clientes **tope);
+void buscarNombreCliente(struct clientes **tp,int id);
 
 void obtenerCantidadDeVentas(struct trabajos *L, int id,int *cont,struct fech fechaInicio,struct fech fechaFin);
 
@@ -581,4 +584,31 @@ int fechaEstaEntre2(struct fech fechaBuscar, struct fech fechaInicio, struct fec
     return (compararFechas(fechaBuscar, fechaInicio) >= 0 && compararFechas(fechaBuscar, fechaFin) <= 0);
 }
 
+void trabajosAsignadosTecnico(struct tecnicos **e, struct tecnicos **s, struct trabajos *L,struct opciones *Lop,struct clientes **tope){
+	
+	listarTecnicos(&(*e),&(*s));
+	int idaux = leerId(23);
+	if(idaux!=0){
+		listarTrabajosDelTecnico(idaux,L,Lop,&(*tope));
+	}
+	
+}
 
+void listarTrabajosDelTecnico(int idTecnico, struct trabajos *r,struct opciones *Lop,struct clientes **tope){
+	
+	while(r!=NULL){
+		if((idTecnico==r->idTecnico)&&(r->finalizado==0)){
+			printf("\n\nId trabajo: %d",r->id);
+			buscarNombre(Lop,r->idOpcion);
+			buscarNombreCliente(&(*tope),r->idCliente);
+			printf("\nUbicacion del trabajo: %s",r->ubicacion);
+			if(r->altura>4){
+				printf("\nSe requiere instalacion a mas de 4 metros - Altura: %d",r->altura);
+			}else{
+				printf("\nNo se requiere instalacion a mas de 4 metros - Altura: %d",r->altura);
+			}
+		}
+		r=r->sgte;
+	}
+	
+}

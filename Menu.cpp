@@ -23,7 +23,7 @@
 void menuOpciones(struct opciones **ini, struct tareas **iniTarea, struct materiales **Lmat, struct stock *Rstc);
 void menuStockMateriales(struct stock **Rstc);
 void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales *Lmat,struct stock *Rstc ,struct opciones *Lop, struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope);
-void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc);
+void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc,struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope);
 void menuTecnicos(struct tecnicos **Etec,struct tecnicos **Stec);
 void menuClientes(struct clientes **TPclt);
 
@@ -294,7 +294,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 			case '5':
 				system("cls");
 				//Listar Trabajos
-				subMenuTrabajos(&(*Ltrab),Lop, Lmat, Rstc);
+				subMenuTrabajos(&(*Ltrab),Lop, Lmat, Rstc,&(*Etec),&(*Stec),&(*tope));
 			break;
 			
 			default:
@@ -307,7 +307,7 @@ void menuTrabajos(struct trabajos **Ltrab,struct tareas *Ltar,struct materiales 
 	}
 }
 
-void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc){
+void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct materiales *Lmat, struct stock *Rstc,struct tecnicos **Etec, struct tecnicos **Stec, struct clientes **tope){
 	
 	char op;
 	int band = 1;
@@ -320,6 +320,7 @@ void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct mater
 		printf("1- Listar Trabajos.\n");
 		printf("2- TOP 4 Opciones mas vendidas.\n");
 		printf("3- Trabajos vendidos entre dos fechas.\n");
+		printf("4- Trabajos asignados a un Tecnico.\n");
 		printf("0- Volver.\n");
 		
 		fflush(stdin);
@@ -355,6 +356,11 @@ void subMenuTrabajos(struct trabajos **Ltrab, struct opciones *Lop, struct mater
 				//Trabajos vendidos entre dos fechas
 				buscarEntrefechas(*Ltrab, Lop, Lmat, Rstc);
 			break;
+			case '4':
+				system("cls");
+				trabajosAsignadosTecnico(&(*Etec),&(*Stec),*Ltrab,Lop,&(*tope));
+			break;
+			
 			
 			
 			default:

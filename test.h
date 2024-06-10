@@ -34,6 +34,8 @@ int leerId(int op) {
 		printf("\nIngrese el ID del tecnico a dar de baja/ 0 para volver: ");
 	}else if(op==22){
 		printf("\nIngrese el ID del tecnico a modificar/ 0 para volver: ");
+	}else if(op==23){
+		printf("\nIngrese el ID del tecnico a mostrar sus trabajos/ 0 para volver: ");
 	}
     while (1) {
         if (scanf("%d", &idx) != 1) {
